@@ -5,4 +5,7 @@
   <p>Vítejte {{ request.user.username }} </p>
   <p>Váš email: {{ request.user.email }}</p>
   <p>Vaše poslední přihlášení: {{ request.user.last_login }}</p>
+
+  <a href="{% url 'logout-url' %}">Odhlásit se</a>
+  <a href="{% url 'protected-page-url' %}">Chráněná stránka</a>
 {% endblock content %}

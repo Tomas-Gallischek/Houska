@@ -12,10 +12,6 @@ def register(request):
             return redirect('login-url')
     else:
         form = CustomUserCreationForm()
-        
-    # Tento řádek zajistí, že se formulář vyrenderuje
-    # jak v případě GET požadavku, tak v případě
-    # nevalidního POST požadavku (s chybovými hlášeními).
     return render(request, 'hracapp/register.html', {'form': form})
 
 def profile(request):

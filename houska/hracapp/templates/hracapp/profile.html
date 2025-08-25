@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Profil</h2>
+  <p>Vítejte {{ request.user.username }} </p>
+  <p>Váš email: {{ request.user.email }}</p>
+  <p>Vaše poslední přihlášení: {{ request.user.last_login }}</p>
+{% endblock content %}

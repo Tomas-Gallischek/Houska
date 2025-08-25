@@ -6,6 +6,9 @@
   <p>Váš email: {{ request.user.email }}</p>
   <p>Vaše poslední přihlášení: {{ request.user.last_login }}</p>
 
-  <a href="{% url 'logout-url' %}">Odhlásit se</a>
+  <form method="post" action="{% url 'logout-url' %}">
+      {% csrf_token %}
+      <button type="submit">Odhlásit se</button>
+  </form>
   <a href="{% url 'protected-page-url' %}">Chráněná stránka</a>
 {% endblock content %}

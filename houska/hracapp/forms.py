@@ -18,4 +18,4 @@ class RegistrationForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = UserCreationForm.Meta.fields + ('gender', 'orders', 'nickname')
+        fields = UserCreationForm.Meta.fields + ('gender', 'orders', 'email', 'nickname', 'pozn')

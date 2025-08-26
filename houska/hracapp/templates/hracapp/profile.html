@@ -9,10 +9,22 @@
     <li>Objednávky: {{ request.user.orders }}</li>
   </ul>
 
+  <h2>Aktualizovat objednávky</h2>
+  <form method="post">
+      {% csrf_token %}
+      <label for="orders">Zadejte novou hodnotu objednávek:</label>
+      <input type="number" name="orders" id="orders" required>
+      <button type="submit">Aktualizovat</button>
+  </form>
 
+  {% if lower_error == 1 %}
+    <p style="color: green;">Úspěšně zadáno!</p>
+    {% elif lower_error == 2 %}
+    <p style="color: red;">Počet objednávek nemůže být nižší než aktuální počet.</p>
+    {% elif lower_error == 3 %}
+    <p style="color: red;">Neplatný formát objednávek.</p>
+  {% endif %}
 
-
-  
   <form method="post" action="{% url 'logout-url' %}">
       {% csrf_token %}
       <button type="submit">Odhlásit se</button>

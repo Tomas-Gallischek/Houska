@@ -17,13 +17,13 @@
       <button type="submit">Aktualizovat</button>
   </form>
 
-  {% if lower_error == 1 %}
-    <p style="color: green;">Úspěšně zadáno!</p>
-    {% elif lower_error == 2 %}
-    <p style="color: red;">Počet objednávek nemůže být nižší než aktuální počet.</p>
-    {% elif lower_error == 3 %}
-    <p style="color: red;">Neplatný formát objednávek.</p>
-  {% endif %}
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 
   <form method="post" action="{% url 'logout-url' %}">
       {% csrf_token %}

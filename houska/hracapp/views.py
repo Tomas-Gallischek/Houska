@@ -3,7 +3,7 @@ from .forms import RegistrationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from .models import CustomUser
-
+from django.contrib import messages
 
 def index(request):
     return render(request, 'hracapp/index.html')
@@ -13,7 +13,7 @@ def register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user) # Přihlásí uživatele automaticky po registraci
+            login(request, user)
             return redirect('profile-url')
     else:
         form = RegistrationForm()
@@ -21,24 +21,34 @@ def register(request):
 
 @login_required
 def profile(request):
+    lower_error = 0
+
+    if request.user.orders is None:
+        request.user.orders = 1
+        request.user.save()
+
+def profile(request):
     if request.user.orders is None:
         request.user.orders = 1
         request.user.save()
 
     if request.method == 'POST':
-        new_orders = int(request.POST.get('orders'))
-        if new_orders is not None:
-            if new_orders >= request.user.orders:
-                request.user.orders = new_orders
-                request.user.save()
-                lower_error = 1
+        try:
+            new_orders = int(request.POST.get('orders'))
+            if new_orders is not None:
+                if new_orders >= request.user.orders:
+                    request.user.orders = new_orders
+                    request.user.save()
+                    messages.success(request, 'Úspěšně AKTUALIZOVÁNO') # Úspěšná zpráva
+                else:
+                    messages.error(request, 'Zadaná hodnota nemůže být menší než aktuální.') # Chybová zpráva
             else:
-                lower_error = 2
-        else:
-            lower_error = 3
-    if lower_error is None:
-        lower_error = 0
+                messages.error(request, 'Nezadali jste hodnotu objednávek.') # Chybová zpráva
+        except (ValueError, TypeError):
+            messages.error(request, 'Zadali jste neplatnou hodnotu.') # Chybová zpráva
         
+        return redirect('profile-url')
+
     XP_aktual = request.user.orders
     lvl_aktual = 1
 
@@ -52,14 +62,11 @@ def profile(request):
         else:
             break
 
-
     return render(request, 'hracapp/profile.html', {
         'XP_aktual': XP_aktual,
         'lvl_aktual': lvl_aktual,
         'lvl_next': lvl_next,
-        'XP_potrebne_next': XP_potrebne_next,
-        'lower_error': lower_error
-
+        'XP_potrebne_next': XP_potrebne_next
     })
 
 @login_required

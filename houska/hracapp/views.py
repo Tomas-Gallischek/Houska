@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from .models import CustomUser
 from django.contrib import messages
+import datetime
+from django.utils import timezone
 
 
 @login_required
@@ -13,24 +15,6 @@ def profile(request):
     if request.user.orders is None:
         request.user.orders = 1
         request.user.save()
-
-# AKTUALIZACE OBJEDNÁVEK
-    if request.method == 'POST':
-        try:
-            new_orders = int(request.POST.get('orders'))
-            if new_orders is not None:
-                if new_orders >= request.user.orders:
-                    request.user.orders = new_orders
-                    request.user.save()
-                    messages.success(request, 'Úspěšně AKTUALIZOVÁNO') # Úspěšná zpráva
-                else:
-                    messages.error(request, 'Zadaná hodnota nemůže být menší než aktuální.') # Chybová zpráva
-            else:
-                messages.error(request, 'Nezadali jste hodnotu objednávek.') # Chybová zpráva
-        except (ValueError, TypeError):
-            messages.error(request, 'Zadali jste neplatnou hodnotu.') # Chybová zpráva
-        
-        return redirect('profile-url')
 
 # VÝPOČET XP A LVL
     XP_aktual = request.user.orders
@@ -46,8 +30,41 @@ def profile(request):
         else:
             break
 
-# VÝPOČET GOLDŮ
-    gold_aktual = CustomUser.objects.get(id=request.user.id).gold
+# GOLDY A OBJEDNÁVKY
+
+    # VÝPOČET NASBÍRANÝCH GOLDŮ
+    time_since_last_collection = timezone.now() - request.user.last_gold_collection
+    seconds_since_last_collection = time_since_last_collection.total_seconds()
+    
+    # Nasbírané goldy s limitem 28 800 sekund (8 hodin)
+    collected_gold = min(int(seconds_since_last_collection), 28800) * request.user.gold_grow
+
+    #FORMULÁŘE
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'collect_gold':
+            request.user.gold += collected_gold
+            request.user.last_gold_collection = timezone.now()
+            request.user.save()
+            messages.success(request, 'Goldy úspěšně sebrány!')
+            return redirect('profile-url')
+        elif action == 'update_orders':
+            # Původní logika pro aktualizaci objednávek
+            try:
+                new_orders = int(request.POST.get('orders'))
+                if new_orders is not None:
+                    if new_orders >= request.user.orders:
+                        request.user.orders = new_orders
+                        request.user.save()
+                        messages.success(request, 'Úspěšně AKTUALIZOVÁNO')
+                    else:
+                        messages.error(request, 'Zadaná hodnota nemůže být menší než aktuální.')
+                else:
+                    messages.error(request, 'Nezadali jste hodnotu objednávek.')
+            except (ValueError, TypeError):
+                pass
+            
+            return redirect('profile-url')
 
 
 # ZÁVĚREČNÝ RENDER STRÁNKY
@@ -55,7 +72,9 @@ def profile(request):
         'XP_aktual': XP_aktual,
         'lvl_aktual': lvl_aktual,
         'lvl_next': lvl_next,
-        'XP_potrebne_next': XP_potrebne_next
+        'XP_potrebne_next': XP_potrebne_next,
+        'collected_gold': collected_gold,
+
     })
 
 @login_required

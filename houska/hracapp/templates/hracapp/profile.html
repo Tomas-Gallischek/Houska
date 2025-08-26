@@ -7,14 +7,26 @@
   <p>Aktuální XP: {{ XP_aktual }}</p>
   <ul>
     <li>Objednávky: {{ request.user.orders }}</li>
+    <li>Celkové goldy: {{ request.user.gold }}</li>
   </ul>
 
   <h2>Aktualizovat objednávky</h2>
   <form method="post">
       {% csrf_token %}
+      <input type="hidden" name="action" value="update_orders">
       <label for="orders">Zadejte novou hodnotu objednávek:</label>
       <input type="number" name="orders" id="orders" required>
       <button type="submit">Aktualizovat</button>
+  </form>
+
+  <hr>
+
+  <h2>Sběr goldů</h2>
+  <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="collect_gold">
+      <p>Máte k dispozici k sebrání {{ collected_gold }} goldů.</p>
+      <button type="submit">Vybrat goldy</button>
   </form>
 
 {% if messages %}

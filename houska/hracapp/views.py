@@ -5,33 +5,16 @@ from django.contrib.auth import login
 from .models import CustomUser
 from django.contrib import messages
 
-def index(request):
-    return render(request, 'hracapp/index.html')
-
-def register(request):
-    if request.method == 'POST':
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('profile-url')
-    else:
-        form = RegistrationForm()
-    return render(request, 'hracapp/register.html', {'form': form})
 
 @login_required
 def profile(request):
-    lower_error = 0
 
+# IMPORT OBJEDNÁVEK Z DATABÁZE
     if request.user.orders is None:
         request.user.orders = 1
         request.user.save()
 
-def profile(request):
-    if request.user.orders is None:
-        request.user.orders = 1
-        request.user.save()
-
+# AKTUALIZACE OBJEDNÁVEK
     if request.method == 'POST':
         try:
             new_orders = int(request.POST.get('orders'))
@@ -49,6 +32,7 @@ def profile(request):
         
         return redirect('profile-url')
 
+# VÝPOČET XP A LVL
     XP_aktual = request.user.orders
     lvl_aktual = 1
 
@@ -62,6 +46,11 @@ def profile(request):
         else:
             break
 
+# VÝPOČET GOLDŮ
+    gold_aktual = CustomUser.objects.get(id=request.user.id).gold
+
+
+# ZÁVĚREČNÝ RENDER STRÁNKY
     return render(request, 'hracapp/profile.html', {
         'XP_aktual': XP_aktual,
         'lvl_aktual': lvl_aktual,
@@ -72,3 +61,17 @@ def profile(request):
 @login_required
 def protected_page(request):
     return render(request, 'hracapp/protected-page.html')
+
+def index(request):
+    return render(request, 'hracapp/index.html')
+
+def register(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('profile-url')
+    else:
+        form = RegistrationForm()
+    return render(request, 'hracapp/register.html', {'form': form})

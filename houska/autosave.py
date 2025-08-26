@@ -11,6 +11,9 @@ def git_autosave():
         # Push do origin (na aktuální větev)
         subprocess.run(["git", "push"], check=True)
 
+        # vymazání konzole
+        subprocess.run("cls", shell=True)
+
         print("✅ Projekt byl úspěšně uložen na GitHub jako 'autosave'.")
     except subprocess.CalledProcessError as e:
         print("❌ Něco se nepovedlo:", e)

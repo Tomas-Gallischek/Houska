@@ -13,7 +13,7 @@ class CustomUser(AbstractUser):
     orders = models.IntegerField(("Počet objednávek"), blank=True, null=True)
     gold = models.IntegerField(("Počet GOLDŮ"), default=1)
     rohlik = models.IntegerField(("Počet ROHLÍKŮ"), default=1)
-    gold_grow = models.IntegerField(("Růst GOLDŮ za 1s"), default=1)
+    gold_growth_coefficient = models.FloatField(("Koeficient růstu GOLDŮ"), default=1.0)
     last_gold_collection = models.DateTimeField(blank=True, null=True, default=models.functions.Now)
 
     def __str__(self):

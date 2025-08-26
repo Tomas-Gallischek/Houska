@@ -7,7 +7,7 @@
   <p>Aktuální XP: {{ XP_aktual }}</p>
   <ul>
     <li>Objednávky: {{ request.user.orders }}</li>
-    <li>Celkové goldy: {{ request.user.gold }}</li>
+    <li>Goldy: {{ request.user.gold }}</li>
   </ul>
 
   <h2>Aktualizovat objednávky</h2>
@@ -26,6 +26,8 @@
       {% csrf_token %}
       <input type="hidden" name="action" value="collect_gold">
       <p>Máte k dispozici k sebrání {{ collected_gold }} goldů.</p>
+      <p>Maximální počet goldů: {{ gold_limit }} / 8h</p>
+      <p>Goldy za hodinu: {{ gold_per_hour }} / h</p>
       <button type="submit">Vybrat goldy</button>
   </form>
 

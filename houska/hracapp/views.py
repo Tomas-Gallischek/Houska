@@ -32,13 +32,24 @@ def profile(request):
 
 # GOLDY A OBJEDNÁVKY
 
+    # Koeficient růstu goldů
+    gold_growth_coefficient = request.user.gold_growth_coefficient
+    if gold_growth_coefficient is not None:
+        if lvl_aktual == 1:
+            gold_growth_coefficient = 1
+        else:
+            gold_growth_coefficient = 1+(lvl_aktual / 2)
+        request.user.gold_growth_coefficient = gold_growth_coefficient
+        request.user.save()
+
     # VÝPOČET NASBÍRANÝCH GOLDŮ
     time_since_last_collection = timezone.now() - request.user.last_gold_collection
     seconds_since_last_collection = time_since_last_collection.total_seconds()
     
     # Nasbírané goldy s limitem 28 800 sekund (8 hodin)
-    collected_gold = min(int(seconds_since_last_collection), 28800) * request.user.gold_grow
-
+    collected_gold = min(int(seconds_since_last_collection), 28800) * request.user.gold_growth_coefficient
+    gold_per_hour = round(request.user.gold_growth_coefficient * 3600)
+    gold_limit = gold_per_hour * 8  # Limit pro zobrazení
     #FORMULÁŘE
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -74,7 +85,9 @@ def profile(request):
         'lvl_next': lvl_next,
         'XP_potrebne_next': XP_potrebne_next,
         'collected_gold': collected_gold,
-
+        'gold_growth_coefficient': gold_growth_coefficient,
+        'gold_limit': gold_limit,
+        'gold_per_hour': gold_per_hour,
     })
 
 @login_required

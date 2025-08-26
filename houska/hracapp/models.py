@@ -15,6 +15,14 @@ class CustomUser(AbstractUser):
     rohlik = models.IntegerField(("Počet ROHLÍKŮ"), default=1)
     gold_growth_coefficient = models.FloatField(("Koeficient růstu GOLDŮ"), default=1.0)
     last_gold_collection = models.DateTimeField(blank=True, null=True, default=models.functions.Now)
+    HP = models.IntegerField(("Počet životů"), default=10, blank=True, null=True)
+    strength = models.IntegerField(("Síla"), default=1, blank=True, null=True)
+    dexterity = models.IntegerField(("Obratnost"), default=1, blank=True, null=True)
+    intelligence = models.IntegerField(("Inteligence"), default=1, blank=True, null=True)
+    charisma = models.IntegerField(("Charisma"), default=1, blank=True, null=True)
+    vitality = models.IntegerField(("Vitalita"), default=1, blank=True, null=True)
+    skill = models.IntegerField(("Zručnost"), default=1, blank=True, null=True)
+
 
     def __str__(self):
         return self.username

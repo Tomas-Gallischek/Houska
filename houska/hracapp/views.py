@@ -8,17 +8,17 @@ import datetime
 from django.utils import timezone
 
 
-@login_required
-def profile(request):
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from django.contrib import messages
 
-# IMPORT OBJEDNÁVEK Z DATABÁZE
-    if request.user.orders is None:
-        request.user.orders = 1
-        request.user.save()
 
-# VÝPOČET XP A LVL
-    XP_aktual = request.user.orders
+def calculate_xp_and_level(orders):
+    XP_aktual = orders
     lvl_aktual = 1
+    lvl_next = 2
+    XP_potrebne_next = round(100 + (lvl_aktual ** 2.2))
 
     for lvl in range(1, 100):
         XP_potrebne = round(100 + (lvl ** 2.2))
@@ -26,31 +26,55 @@ def profile(request):
             XP_aktual -= XP_potrebne
             lvl_aktual += 1
             lvl_next = lvl_aktual + 1
-            XP_potrebne_next = round(100 + ((lvl+1) ** 2.2))
+            XP_potrebne_next = round(100 + ((lvl + 1) ** 2.2))
         else:
             break
 
-# GOLDY A OBJEDNÁVKY
+    return XP_aktual, lvl_aktual, lvl_next, XP_potrebne_next
 
+
+def calculate_gold(user, lvl_aktual):
     # Koeficient růstu goldů
-    gold_growth_coefficient = request.user.gold_growth_coefficient
-    if gold_growth_coefficient is not None:
+    if user.gold_growth_coefficient is not None:
         if lvl_aktual == 1:
             gold_growth_coefficient = 1
         else:
-            gold_growth_coefficient = 1+(lvl_aktual / 2)
-        request.user.gold_growth_coefficient = gold_growth_coefficient
-        request.user.save()
+            gold_growth_coefficient = 1 + (lvl_aktual / 2)
+        user.gold_growth_coefficient = gold_growth_coefficient
+        user.save()
+    else:
+        gold_growth_coefficient = 1
 
     # VÝPOČET NASBÍRANÝCH GOLDŮ
-    time_since_last_collection = timezone.now() - request.user.last_gold_collection
+    time_since_last_collection = timezone.now() - user.last_gold_collection
     seconds_since_last_collection = time_since_last_collection.total_seconds()
-    
-    # Nasbírané goldy s limitem 28 800 sekund (8 hodin)
-    collected_gold = min(int(seconds_since_last_collection), 28800) * request.user.gold_growth_coefficient
-    gold_per_hour = round(request.user.gold_growth_coefficient * 3600)
+
+    collected_gold = min(int(seconds_since_last_collection), 28800) * gold_growth_coefficient
+    gold_per_hour = round(gold_growth_coefficient * 3600)
     gold_limit = gold_per_hour * 8  # Limit pro zobrazení
-    #FORMULÁŘE
+
+    return collected_gold, gold_growth_coefficient, gold_limit, gold_per_hour
+
+
+def render_profile(request, context):
+    return render(request, 'hracapp/profile.html', context)
+
+
+@login_required
+def profile(request):
+
+    # Pokud uživatel nemá žádné objednávky
+    if request.user.orders is None:
+        request.user.orders = 1
+        request.user.save()
+
+    # Výpočet XP a levelu
+    XP_aktual, lvl_aktual, lvl_next, XP_potrebne_next = calculate_xp_and_level(request.user.orders)
+
+    # Výpočet goldů
+    collected_gold, gold_growth_coefficient, gold_limit, gold_per_hour = calculate_gold(request.user, lvl_aktual)
+
+    # POST formuláře
     if request.method == 'POST':
         action = request.POST.get('action')
         if action == 'collect_gold':
@@ -59,8 +83,8 @@ def profile(request):
             request.user.save()
             messages.success(request, 'Goldy úspěšně sebrány!')
             return redirect('profile-url')
+
         elif action == 'update_orders':
-            # Původní logika pro aktualizaci objednávek
             try:
                 new_orders = int(request.POST.get('orders'))
                 if new_orders is not None:
@@ -74,12 +98,10 @@ def profile(request):
                     messages.error(request, 'Nezadali jste hodnotu objednávek.')
             except (ValueError, TypeError):
                 pass
-            
             return redirect('profile-url')
 
-
-# ZÁVĚREČNÝ RENDER STRÁNKY
-    return render(request, 'hracapp/profile.html', {
+    # Kontext pro render
+    context = {
         'XP_aktual': XP_aktual,
         'lvl_aktual': lvl_aktual,
         'lvl_next': lvl_next,
@@ -88,7 +110,10 @@ def profile(request):
         'gold_growth_coefficient': gold_growth_coefficient,
         'gold_limit': gold_limit,
         'gold_per_hour': gold_per_hour,
-    })
+    }
+
+    return render_profile(request, context)
+
 
 @login_required
 def protected_page(request):

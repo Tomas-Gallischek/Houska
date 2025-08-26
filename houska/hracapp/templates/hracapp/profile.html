@@ -1,15 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Profil</h1>
-  <h2>Vítejte {{ request.user.username }}</h2>
-  <h3>Vaše údaje</h3>
+  <h1>{{ request.user.username }}</h1>
+  <p>Aktuální úroveň: {{ lvl_aktual }}</p>
+  <p>Potřebné XP pro další úroveň: {{ XP_potrebne_next }}</p>
+  <p>Aktuální XP: {{ XP_aktual }}</p>
   <ul>
-    <li>Email: {{ request.user.email }}</li>
-    <li>Pohlaví: {{ request.user.gender }}</li>
     <li>Objednávky: {{ request.user.orders }}</li>
-    <li>Přezdívka: {{ request.user.nickname }}</li>
   </ul>
+
+
+
+
+  
   <form method="post" action="{% url 'logout-url' %}">
       {% csrf_token %}
       <button type="submit">Odhlásit se</button>

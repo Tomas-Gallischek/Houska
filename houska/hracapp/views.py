@@ -4,6 +4,23 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib import messages
 from django.utils import timezone
+from .models import Playerinfo
+
+
+def atributy_funkce(request):
+    # Získání atributů uživatele
+    user = request.user
+    atributy = {
+        'HP': user.HP,
+        'charisma': user.charisma,
+        'dexterity': user.dexterity,
+        'intelligence': user.intelligence,
+        'skill': user.skill,
+        'strength': user.strength,
+        'vitality': user.vitality,
+    }
+    return atributy
+
 
 def calculate_xp_and_level(steps):
     if steps is None:
@@ -46,11 +63,10 @@ def calculate_gold(user, lvl_aktual):
     gold_per_hour = round(gold_growth_coefficient * 3600)
     gold_limit = gold_per_hour * 8  # Limit pro zobrazení
 
-    return collected_gold, gold_growth_coefficient, gold_limit, gold_per_hour
+    return round(collected_gold,2), round(gold_growth_coefficient,2), round(gold_limit,2), round(gold_per_hour,2)
 
 
-def render_profile(request, context):
-    return render(request, 'hracapp/profile.html', context)
+
 
 
 @login_required
@@ -61,11 +77,14 @@ def profile(request):
         request.user.steps = 1
         request.user.save()
 
-    # Výpočet XP a levelu
+    # Volání funkce pro LVL
     XP_aktual, lvl_aktual, lvl_next, XP_potrebne_next = calculate_xp_and_level(request.user.steps)
 
-    # Výpočet goldů
+    # Volání funkce pro Gold
     collected_gold, gold_growth_coefficient, gold_limit, gold_per_hour = calculate_gold(request.user, lvl_aktual)
+
+    # Volání funkce pro atributy
+    atributy = atributy_funkce(request)
 
     # POST formuláře
     if request.method == 'POST':
@@ -103,6 +122,7 @@ def profile(request):
         'gold_growth_coefficient': gold_growth_coefficient,
         'gold_limit': gold_limit,
         'gold_per_hour': gold_per_hour,
+        'atributy': atributy,
     }
 
     return render_profile(request, context)
@@ -125,3 +145,6 @@ def register(request):
     else:
         form = RegistrationForm()
     return render(request, 'hracapp/register.html', {'form': form})
+
+def render_profile(request, context):
+    return render(request, 'hracapp/profile.html', context)

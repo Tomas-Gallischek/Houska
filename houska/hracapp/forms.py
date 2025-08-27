@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser
+from .models import Playerinfo
 
 class RegistrationForm(UserCreationForm):
     name = forms.CharField(label="Jméno", max_length=100, required=False)
@@ -19,5 +19,5 @@ class RegistrationForm(UserCreationForm):
 
 
     class Meta(UserCreationForm.Meta):
-        model = CustomUser
+        model = Playerinfo
         fields = UserCreationForm.Meta.fields + ('gender', 'name', 'surname', 'email', 'steps')

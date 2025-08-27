@@ -129,4 +129,4 @@ LOGOUT_REDIRECT_URL = '/logout'
 
 LOGIN_REDIRECT_URL = '/profile'
 
-AUTH_USER_MODEL = 'hracapp.CustomUser'
+AUTH_USER_MODEL = 'hracapp.Playerinfo'

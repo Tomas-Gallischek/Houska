@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, redirect
 from .forms import RegistrationForm
 from django.contrib.auth.decorators import login_required
@@ -5,9 +6,8 @@ from django.contrib.auth import login
 from django.contrib import messages
 from django.utils import timezone
 from .models import Playerinfo
-from .utils import atributy_cena, calculate_xp_and_level, calculate_gold, atributy_funkce
 from django.http import JsonResponse
-import json
+from .utils import atributy_cena, calculate_xp_and_level, calculate_gold, atributy_funkce
 
 @login_required
 def profile(request):
@@ -92,6 +92,7 @@ def update_steps(request):
             messages.error(request, 'Nezadali jste platnou hodnotu kroků.')
     return render(request, 'hracapp/steps_input.html')
 
+
 @login_required
 def update_attribute(request):
     if request.method == 'POST':
@@ -102,11 +103,25 @@ def update_attribute(request):
             # Zkontroluje, zda je atribut platný a není to HP
             valid_attributes = ['strength', 'dexterity', 'intelligence', 'charisma', 'vitality', 'skill']
             if attribute_to_update in valid_attributes:
+
+                # Odečtení ceny atributu z uživatelských goldů
                 user = request.user
+                old_prices = atributy_cena(request)
+                atribut_bill = old_prices.get(f'{attribute_to_update}_price')
+                user.gold -= atribut_bill
+                user.save()
+                new_golds = user.gold
+
+                # Aktualizace atributu
                 current_value = getattr(user, attribute_to_update)
                 setattr(user, attribute_to_update, current_value + 1)
                 user.save()
-                return JsonResponse({'success': True, 'new_value': current_value + 1})
+
+                # Vypočítá nové ceny atributů
+                new_prices = atributy_cena(request)
+
+
+                return JsonResponse({'success': True, 'new_value': current_value + 1, 'new_prices': new_prices, 'new_golds': new_golds})
             else:
                 return JsonResponse({'success': False, 'error': 'Neplatný atribut.'}, status=400)
         except json.JSONDecodeError:

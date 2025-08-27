@@ -104,6 +104,7 @@ def calculate_gold(user, lvl_aktual):
     gold_per_hour = round(gold_growth_coefficient * 3600)
     gold_limit = gold_per_hour * 8  # Limit pro zobrazení
 
+    user.save()
     return round(collected_gold,2), round(gold_growth_coefficient,2), round(gold_limit,2), round(gold_per_hour,2)
 
 

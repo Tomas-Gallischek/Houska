@@ -69,14 +69,14 @@ def rasa_bonus(request):
         charisma_bonus = 2 * koeficient_statu
         skill_bonus = 4 * koeficient_statu
 
-    user.HP_bonus = hp_bonus
-    user.strength_base = strength_bonus
-    user.vitality_base = vitality_bonus
-    user.dexterity_base = dexterity_bonus
-    user.intelligence_base = intelligence_bonus
-    user.charisma_base = charisma_bonus
-    user.skill_base = skill_bonus
-    user.save()
+    request.user.HP_bonus = float(hp_bonus)
+    request.user.strength_base = float(strength_bonus)
+    request.user.vitality_base = float(vitality_bonus)
+    request.user.dexterity_base = float(dexterity_bonus)
+    request.user.intelligence_base = float(intelligence_bonus)
+    request.user.charisma_base = float(charisma_bonus)
+    request.user.skill_base = float(skill_bonus)
+    request.user.save()
 
     rasa_bonus = (
         hp_bonus + strength_bonus + vitality_bonus + dexterity_bonus + intelligence_bonus + charisma_bonus + skill_bonus

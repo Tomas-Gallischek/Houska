@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-
 from . import rasy_povolani
 from .forms import RegistrationForm
 from django.contrib.auth.decorators import login_required
@@ -10,22 +9,21 @@ from .models import Playerinfo
 
 
 
-
+@login_required
 def atributy_funkce(request):
     user = request.user
-    rasa = rasy_povolani.rasa_bonus(request)
-    rasa_bonus_hp = rasa['hp_bonus']
+
     # Výpočet HP
-    hp = (user.lvl) + (user.lvl*5) + (user.lvl**2) + rasa_bonus_hp
+    hp = ((user.lvl) + (user.lvl*5) + (user.lvl**2)) * user.hp_bonus
     user.hp = hp
 
-    # Vypsání atributů z databáze
-    charisma = user.charisma
-    dexterity = user.dexterity
-    intelligence = user.intelligence
-    skill = user.skill
-    strength = user.strength
-    vitality = user.vitality
+    # Vypsání atributů z databáze + BASE staty
+    charisma = user.charisma + user.charisma_base
+    dexterity = user.dexterity + user.dexterity_base
+    intelligence = user.intelligence + user.intelligence_base
+    skill = user.skill + user.skill_base
+    strength = user.strength + user.strength_base
+    vitality = user.vitality + user.vitality_base
 
     atributy = {
         'HP': int(hp),

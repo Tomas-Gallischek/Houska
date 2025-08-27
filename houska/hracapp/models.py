@@ -53,7 +53,7 @@ class Playerinfo(AbstractUser):
 
     # ATRIBUTY HRÁČOVY POSTAVY
     HP = models.IntegerField(("Počet životů"), default=10, blank=True, null=True)
-    HP_bonus = models.FloatField(("Bonus k životům"), default=1, blank=True, null=True)
+    hp_bonus = models.FloatField(("Bonus k životům"), default=1, blank=True, null=True)
     strength = models.IntegerField(("Síla"), default=1, blank=True, null=True)
     strength_base = models.IntegerField(("Základní síla"), default=1, blank=True, null=True)
     dexterity = models.IntegerField(("Obratnost"), default=1, blank=True, null=True)

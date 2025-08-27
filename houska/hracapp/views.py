@@ -9,6 +9,7 @@ from .models import Playerinfo
 from django.http import JsonResponse
 from .utils import atributy_cena, calculate_xp_and_level, calculate_gold, atributy_funkce
 
+
 @login_required
 def profile(request):
 
@@ -23,7 +24,6 @@ def profile(request):
 
     #volání funkce pro CENU ATRIBUTŮ
     cena_atributu = atributy_cena(request)
-
 
     # POST formuláře
     if request.method == 'POST':

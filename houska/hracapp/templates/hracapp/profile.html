@@ -80,7 +80,7 @@ Cena: <span id="cena-vitality">{{ cena_vitality }}</span> goldů<br>
                     const attributeSpan = document.getElementById(attribute + '-value');
                     attributeSpan.textContent = data.new_value;
                     
-                    // Nový kód: Aktualizuje ceny pro všechny atributy
+                    // Aktualizuje ceny pro všechny atributy
                     if (data.new_prices) {
                         for (const price_attribute in data.new_prices) {
                             const priceSpan = document.getElementById('cena-' + price_attribute.replace('_price', ''));
@@ -89,17 +89,18 @@ Cena: <span id="cena-vitality">{{ cena_vitality }}</span> goldů<br>
                             }
                         }
                     }
-                        if (data.new_golds) {
-                            const goldSpan = document.getElementById('gold-value');
-                            if (goldSpan) {
-                                goldSpan.textContent = data.new_golds;
-                            }
+                    
+                    // Aktualizuje počet goldů
+                    if (data.new_golds) {
+                        const goldSpan = document.getElementById('gold-value');
+                        if (goldSpan) {
+                            goldSpan.textContent = data.new_golds;
                         }
+                    }
+                } else {
+                    alert(data.error);
                 }
-            } else {
-                alert(data.error);
-            }
-        })
+            })
             .catch(error => {
                 console.error('Error:', error);
                 alert('Při aktualizaci atributu došlo k chybě.');

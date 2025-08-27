@@ -1,5 +1,7 @@
 import json
+from urllib import request
 from django.shortcuts import render, redirect
+from .rasy_povolani import povolani_bonus, rasa_bonus
 from .forms import RegistrationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
@@ -7,11 +9,15 @@ from django.contrib import messages
 from django.utils import timezone
 from .models import Playerinfo
 from django.http import JsonResponse
-from .utils import atributy_cena, calculate_xp_and_level, calculate_gold, atributy_funkce
+from .utils import atributy_cena, calculate_xp_and_level, calculate_gold, atributy_hodnota
 
 
 @login_required
 def profile(request):
+    
+    # Inicializace RASY A POVOLÁNÍ
+    povolani_bonus(request)
+    rasa_bonus(request)
 
     # Volání funkce pro LVL
     XP_aktual, lvl_aktual, lvl_next, XP_potrebne_next = calculate_xp_and_level(request)
@@ -20,7 +26,7 @@ def profile(request):
     collected_gold, gold_growth_coefficient, gold_limit, gold_per_hour = calculate_gold(request.user, lvl_aktual)
 
     # Volání funkce pro atributy
-    atributy = atributy_funkce(request)
+    atributy = atributy_hodnota(request)
 
     #volání funkce pro CENU ATRIBUTŮ
     cena_atributu = atributy_cena(request)
@@ -49,7 +55,7 @@ def profile(request):
         'cena_charisma': cena_atributu['charisma_price'],
         'cena_dexterity': cena_atributu['dexterity_price'],
         'cena_intelligence': cena_atributu['intelligence_price'],
-        'cena_skill': cena_atributu['skill_price'],
+        'cena_luck': cena_atributu['luck_price'],
         'cena_strength': cena_atributu['strength_price'],
         'cena_vitality': cena_atributu['vitality_price'],
 
@@ -66,7 +72,6 @@ def index(request):
     return render(request, 'hracapp/index.html')
 
 def register(request):
-
     #REGISTRAČNÍ FORMULÁŘ
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -101,7 +106,7 @@ def update_attribute(request):
             attribute_to_update = data.get('attribute')
             
             # Zkontroluje, zda je atribut platný a není to HP
-            valid_attributes = ['strength', 'dexterity', 'intelligence', 'charisma', 'vitality', 'skill']
+            valid_attributes = ['strength', 'dexterity', 'intelligence', 'charisma', 'vitality', 'luck']
             if attribute_to_update in valid_attributes:
 
                 # Odečtení ceny atributu z uživatelských goldů

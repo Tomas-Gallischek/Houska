@@ -21,15 +21,14 @@ class Playerinfo(AbstractUser):
 
     POVOLANI_CHOICES = (
             ('choice:', 'Vyber:'),
-            ('hunter', 'Bojovník'),
-            ('priest', 'Kněz'),
+            ('ranger', 'Hraničář'),
+            ('monk', 'Mnich'),
             ('warrior', 'Válečník'),
             ('paladin', 'Paladin'),
             ('mage', 'Mág'),
             ('rogue', 'Roguna'),
             ('necromancer', 'Nekromant'),
             ('berserker', 'Ničitel'),
-            ('warlock', 'Temný mág'),
             ('druid', 'Druid')
         )
 
@@ -64,9 +63,10 @@ class Playerinfo(AbstractUser):
     charisma_base = models.IntegerField(("Základní charisma"), default=1, blank=True, null=True)
     vitality = models.IntegerField(("Vitalita"), default=1, blank=True, null=True)
     vitality_base = models.IntegerField(("Základní vitalita"), default=1, blank=True, null=True)
-    skill = models.IntegerField(("Zručnost"), default=1, blank=True, null=True)
-    skill_base = models.IntegerField(("Základní zručnost"), default=1, blank=True, null=True)
+    luck = models.IntegerField(("Zručnost"), default=1, blank=True, null=True)
+    luck_base = models.IntegerField(("Základní zručnost"), default=1, blank=True, null=True)
 
+    dmg_atribut = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return self.username

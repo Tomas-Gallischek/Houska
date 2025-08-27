@@ -10,7 +10,7 @@ from .models import Playerinfo
 
 
 @login_required
-def atributy_funkce(request):
+def atributy_hodnota(request):
     user = request.user
     rasy_povolani.rasa_bonus(request)
     # Výpočet HP
@@ -21,7 +21,7 @@ def atributy_funkce(request):
     charisma = user.charisma + user.charisma_base
     dexterity = user.dexterity + user.dexterity_base
     intelligence = user.intelligence + user.intelligence_base
-    skill = user.skill + user.skill_base
+    luck = user.luck + user.luck_base
     strength = user.strength + user.strength_base
     vitality = user.vitality + user.vitality_base
 
@@ -30,7 +30,7 @@ def atributy_funkce(request):
         'charisma': int(charisma),
         'dexterity': int(dexterity),
         'intelligence': int(intelligence),
-        'skill': int(skill),
+        'luck': int(luck),
         'strength': int(strength),
         'vitality': int(vitality),
     }
@@ -41,19 +41,19 @@ def atributy_funkce(request):
 
 def atributy_cena(request):
 
-    user = atributy_funkce(request)
+    user = atributy_hodnota(request)
     hp = user['HP']
     charisma = user['charisma']
     dexterity = user['dexterity']
     intelligence = user['intelligence']
-    skill = user['skill']
+    luck = user['luck']
     strength = user['strength']
     vitality = user['vitality']
 
     charisma_price = (charisma - request.user.charisma_base) + ((charisma - request.user.charisma_base) * 1.5)
     dexterity_price = (dexterity - request.user.dexterity_base) + ((dexterity - request.user.dexterity_base) * 1.5)
     intelligence_price = (intelligence - request.user.intelligence_base) + ((intelligence - request.user.intelligence_base) * 1.5)
-    skill_price = (skill - request.user.skill_base) + ((skill - request.user.skill_base) * 1.5)
+    luck_price = (luck - request.user.luck_base) + ((luck - request.user.luck_base) * 1.5)
     strength_price = (strength - request.user.strength_base) + ((strength - request.user.strength_base) * 1.5)
     vitality_price = (vitality - request.user.vitality_base) + ((vitality - request.user.vitality_base) * 1.5)
 
@@ -61,7 +61,7 @@ def atributy_cena(request):
         'charisma_price': int(charisma_price),
         'dexterity_price': int(dexterity_price),
         'intelligence_price': int(intelligence_price),
-        'skill_price': int(skill_price),
+        'luck_price': int(luck_price),
         'strength_price': int(strength_price),
         'vitality_price': int(vitality_price)
     }

@@ -1,5 +1,48 @@
+from urllib import request
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
+
+@login_required
+def povolani_bonus(request):
+    
+    # SÍLA
+    if request.user.povolani == 'Válečník' or request.user.povolani == 'warrior':
+        dmg_atribut = 'strength'
+        dmg_atribut = 'strength'
+    elif request.user.povolani == 'Ničitel' or request.user.povolani == 'berserker':
+        dmg_atribut = 'strength'
+    elif request.user.povolani == 'Paladin' or request.user.povolani == 'paladin':
+        dmg_atribut = 'strength'
+
+    # INTELIGENCE
+        dmg_atribut = 'intelligence' 
+    elif request.user.povolani == 'Mág' or request.user.povolani == 'mage':
+        dmg_atribut = 'intelligence'
+    elif request.user.povolani == 'Nekromant' or request.user.povolani == 'necromancer':
+        dmg_atribut = 'intelligence'
+        dmg_atribut = 'intelligence'
+    elif request.user.povolani == 'Druid' or request.user.povolani == 'druid':
+        dmg_atribut = 'intelligence'
+
+
+    # OBRATNOST
+    elif request.user.povolani == 'Roguna' or request.user.povolani == 'rogue':
+        dmg_atribut = 'dexterity'
+    elif request.user.povolani == 'Hraničář' or request.user.povolani == 'ranger':
+        dmg_atribut = 'dexterity'
+    elif request.user.povolani == 'Mnich' or request.user.povolani == 'monk':
+        dmg_atribut = 'wisdom'
+
+    else:
+        print(" ! NEVYBRALO SE ŽÁDNÉ POVOLÁNÍ !")
+    request.user.dmg_atribut = dmg_atribut
+    request.user.save()
+
+
+
+
+
+
 
 @login_required
 def rasa_bonus(request):
@@ -15,7 +58,7 @@ def rasa_bonus(request):
         dexterity_bonus = 4 * koeficient_statu
         intelligence_bonus = 3 * koeficient_statu
         charisma_bonus = 5 * koeficient_statu
-        skill_bonus = 3 * koeficient_statu
+        luck_bonus = 3 * koeficient_statu
 
     elif request.user.rasa == 'Elf' or request.user.rasa == 'elf':
         # OBECNÉ BONUSY
@@ -26,7 +69,7 @@ def rasa_bonus(request):
         dexterity_bonus = 5 * koeficient_statu
         intelligence_bonus = 7 * koeficient_statu
         charisma_bonus = 4 * koeficient_statu
-        skill_bonus = 3 * koeficient_statu
+        luck_bonus = 3 * koeficient_statu
 
     elif request.user.rasa == 'Trpaslík' or request.user.rasa == 'dwarf':
         # OBECNÉ BONUSY
@@ -37,7 +80,7 @@ def rasa_bonus(request):
         dexterity_bonus = 3 * koeficient_statu
         intelligence_bonus = 3 * koeficient_statu
         charisma_bonus = 3 * koeficient_statu
-        skill_bonus = 6 * koeficient_statu  
+        luck_bonus = 6 * koeficient_statu  
 
     elif request.user.rasa == 'Urgal' or request.user.rasa == 'urgal':
         # OBECNÉ BONUSY
@@ -48,7 +91,7 @@ def rasa_bonus(request):
         dexterity_bonus = 3 * koeficient_statu
         intelligence_bonus = 3 * koeficient_statu
         charisma_bonus = 2 * koeficient_statu
-        skill_bonus = 2 * koeficient_statu
+        luck_bonus = 2 * koeficient_statu
 
     elif request.user.rasa == 'Gnóm' or request.user.rasa == 'gnome':
         # OBECNÉ BONUSY
@@ -59,7 +102,7 @@ def rasa_bonus(request):
         dexterity_bonus = 4 * koeficient_statu
         intelligence_bonus = 5 * koeficient_statu
         charisma_bonus = 2 * koeficient_statu
-        skill_bonus = 5 * koeficient_statu
+        luck_bonus = 5 * koeficient_statu
 
     elif request.user.rasa == 'Stín' or request.user.rasa == 'shadow':
         # OBECNÉ BONUSY
@@ -70,7 +113,7 @@ def rasa_bonus(request):
         dexterity_bonus = 10 * koeficient_statu
         intelligence_bonus = 3 * koeficient_statu
         charisma_bonus = 2 * koeficient_statu
-        skill_bonus = 4 * koeficient_statu
+        luck_bonus = 4 * koeficient_statu
     else:
         print(" ! NEVYBRALA SE ŽÁDNÁ RASA !")
 
@@ -80,10 +123,10 @@ def rasa_bonus(request):
     request.user.dexterity_base = float(dexterity_bonus)
     request.user.intelligence_base = float(intelligence_bonus)
     request.user.charisma_base = float(charisma_bonus)
-    request.user.skill_base = float(skill_bonus)
+    request.user.luck_base = float(luck_bonus)
     request.user.save()
 
     rasa_bonus = (
-        hp_bonus + strength_bonus + vitality_bonus + dexterity_bonus + intelligence_bonus + charisma_bonus + skill_bonus
+        hp_bonus + strength_bonus + vitality_bonus + dexterity_bonus + intelligence_bonus + charisma_bonus + luck_bonus
     )
     return rasa_bonus

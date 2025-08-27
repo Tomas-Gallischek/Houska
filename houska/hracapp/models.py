@@ -9,44 +9,29 @@ class Playerinfo(AbstractUser):
         ('other', 'Jiné'),
     )
 
-    FRAKCE_CHOICES = (
-        ('Light Side', 'Světlo'),
-        ('Dark Side', 'Prázdnota'),
-    )
-
-    if FRAKCE_CHOICES == 'Light Side':
-        RASA_CHOICES = (
+    RASA_CHOICES = (
+            ('Choice:', 'Vyber:'),
             ('human', 'Člověk'),
             ('elf', 'Elf'),
             ('dwarf', 'Trpaslík'),
-        )
-    elif FRAKCE_CHOICES == 'Dark Side':
-        RASA_CHOICES = (
             ('Urgal', 'Urgal'),
             ('Gnóm', 'Gnóm'),
-            ('Dark Elf', 'Temný Elf'),
+            ('Shadow', 'Stín'),
         )
-    else:
-        RASA_CHOICES = None
 
-    if FRAKCE_CHOICES == 'Light Side':
-        POVOLANI_CHOICES = (
+    POVOLANI_CHOICES = (
+            ('Choice:', 'Vyber:'),
             ('HUNTER', 'Bojovník'),
             ('PRIEST', 'Kněz'),
             ('WARRIOR', 'Válečník'),
             ('PALADIN', 'Paladin'),
-            ('MAGE', 'Mág')
-        )
-    elif FRAKCE_CHOICES == 'Dark Side':
-        POVOLANI_CHOICES = (
+            ('MAGE', 'Mág'),
             ('ROGUE', 'Roguna'),
             ('NECROMANCER', 'Nekromant'),
-            ('BERSERKER', 'Berserk'),
+            ('BERSERKER', 'Ničitel'),
             ('WARLOCK', 'Temný mág'),
             ('DRUID', 'Druid')
         )
-    else:
-        POVOLANI_CHOICES = None
 
     # OSOBNÍ INFORMACE O HRÁČI
     name = models.CharField(max_length=100, blank=True, null=True)
@@ -57,7 +42,6 @@ class Playerinfo(AbstractUser):
     # ZÁKLADNÍ INFORMACE O HRÁČOVĚ POSTAVĚ
     lvl = models.IntegerField(("Úroveň"), default=1, blank=True, null=True)
     xp = models.IntegerField(("Zkušenosti"), default=0, blank=True, null=True)
-    frakce = models.CharField(max_length=20, choices=FRAKCE_CHOICES, blank=True, null=True)
     rasa = models.CharField(max_length=20, choices=RASA_CHOICES, blank=True, null=True)
     povolani = models.CharField(max_length=20, choices=POVOLANI_CHOICES, blank=True, null=True)
 

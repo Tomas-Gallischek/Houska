@@ -128,3 +128,16 @@ def update_attribute(request):
             return JsonResponse({'success': False, 'error': 'Neplatná JSON data.'}, status=400)
     
     return JsonResponse({'success': False, 'error': 'Neplatná metoda požadavku.'}, status=405)
+
+@login_required
+def gold_per_second(request):
+    lvl_aktual = calculate_xp_and_level(request)[1] 
+    golds_info = calculate_gold(request.user, lvl_aktual)
+    collected_gold = golds_info[0]
+    aktualizovana_hodnota = collected_gold 
+    
+    # Vrácení dat jako JSON
+    data = {
+        'hodnota': aktualizovana_hodnota,
+    }
+    return JsonResponse(data)

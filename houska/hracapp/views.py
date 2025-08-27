@@ -108,9 +108,13 @@ def update_attribute(request):
                 user = request.user
                 old_prices = atributy_cena(request)
                 atribut_bill = old_prices.get(f'{attribute_to_update}_price')
-                user.gold -= atribut_bill
-                user.save()
-                new_golds = user.gold
+                if user.gold >= atribut_bill:
+                    user.gold -= atribut_bill
+                    user.save()
+                    new_golds = user.gold
+                else:
+                    breakpoint
+                    return JsonResponse({'success': False, 'error': 'Nedostatek goldů'})
 
                 # Aktualizace atributu
                 current_value = getattr(user, attribute_to_update)

@@ -5,7 +5,7 @@ from django.contrib.auth import login
 from django.contrib import messages
 from django.utils import timezone
 from .models import Playerinfo
-from .utils import calculate_xp_and_level, calculate_gold, atributy_funkce
+from .utils import atributy_cena, calculate_xp_and_level, calculate_gold, atributy_funkce
 from django.http import JsonResponse
 import json
 
@@ -20,6 +20,10 @@ def profile(request):
 
     # Volání funkce pro atributy
     atributy = atributy_funkce(request)
+
+    #volání funkce pro CENU ATRIBUTŮ
+    cena_atributu = atributy_cena(request)
+
 
     # POST formuláře
     if request.method == 'POST':
@@ -42,6 +46,13 @@ def profile(request):
         'gold_limit': gold_limit,
         'gold_per_hour': gold_per_hour,
         'atributy': atributy,
+        'cena_charisma': cena_atributu['charisma_price'],
+        'cena_dexterity': cena_atributu['dexterity_price'],
+        'cena_intelligence': cena_atributu['intelligence_price'],
+        'cena_skill': cena_atributu['skill_price'],
+        'cena_strength': cena_atributu['strength_price'],
+        'cena_vitality': cena_atributu['vitality_price'],
+
     }
 
     return render_profile(request, context)

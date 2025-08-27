@@ -18,19 +18,50 @@ def atributy_funkce(request):
     strength = user.strength
     vitality = user.vitality
 
+
+
     atributy = {
-        'HP': hp,
-        'charisma': charisma,
-        'dexterity': dexterity,
-        'intelligence': intelligence,
-        'skill': skill,
-        'strength': strength,
-        'vitality': vitality,
+        'HP': int(hp),
+        'charisma': int(charisma),
+        'dexterity': int(dexterity),
+        'intelligence': int(intelligence),
+        'skill': int(skill),
+        'strength': int(strength),
+        'vitality': int(vitality),
     }
+
 
     user.save()
     return atributy
 
+def atributy_cena(request):
+
+    user = atributy_funkce(request)
+    hp = user['HP']
+    charisma = user['charisma']
+    dexterity = user['dexterity']
+    intelligence = user['intelligence']
+    skill = user['skill']
+    strength = user['strength']
+    vitality = user['vitality']
+
+    charisma_price = charisma + (charisma * 1.5)
+    dexterity_price = dexterity + (dexterity * 1.5)
+    intelligence_price = intelligence + (intelligence * 1.5)
+    skill_price = skill + (skill * 1.5)
+    strength_price = strength + (strength * 1.5)
+    vitality_price = vitality + (vitality * 1.5)
+
+    cena = {
+        'charisma_price': int(charisma_price),
+        'dexterity_price': int(dexterity_price),
+        'intelligence_price': int(intelligence_price),
+        'skill_price': int(skill_price),
+        'strength_price': int(strength_price),
+        'vitality_price': int(vitality_price)
+    }
+
+    return cena
 
 def calculate_xp_and_level(steps):
     if steps is None:

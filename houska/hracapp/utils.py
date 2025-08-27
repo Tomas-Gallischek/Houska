@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+
+from houska.hracapp import rasy_povolani
 from .forms import RegistrationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
@@ -7,11 +9,14 @@ from django.utils import timezone
 from .models import Playerinfo
 
 
+
+
 def atributy_funkce(request):
     user = request.user
-
+    rasa = rasy_povolani.rasa_bonus(request)
+    rasa_bonus_hp = rasa['hp_bonus']
     # Výpočet HP
-    hp = (user.lvl) + (user.lvl*5) + (user.lvl**2)
+    hp = (user.lvl) + (user.lvl*5) + (user.lvl**2) + rasa_bonus_hp
     user.hp = hp
 
     # Vypsání atributů z databáze

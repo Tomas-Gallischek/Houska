@@ -53,12 +53,19 @@ class Playerinfo(AbstractUser):
 
     # ATRIBUTY HRÁČOVY POSTAVY
     HP = models.IntegerField(("Počet životů"), default=10, blank=True, null=True)
+    HP_bonus = models.FloatField(("Bonus k životům"), default=1, blank=True, null=True)
     strength = models.IntegerField(("Síla"), default=1, blank=True, null=True)
+    strength_base = models.IntegerField(("Základní síla"), default=1, blank=True, null=True)
     dexterity = models.IntegerField(("Obratnost"), default=1, blank=True, null=True)
+    dexterity_base = models.IntegerField(("Základní obratnost"), default=1, blank=True, null=True)
     intelligence = models.IntegerField(("Inteligence"), default=1, blank=True, null=True)
+    intelligence_base = models.IntegerField(("Základní inteligence"), default=1, blank=True, null=True)
     charisma = models.IntegerField(("Charisma"), default=1, blank=True, null=True)
+    charisma_base = models.IntegerField(("Základní charisma"), default=1, blank=True, null=True)
     vitality = models.IntegerField(("Vitalita"), default=1, blank=True, null=True)
+    vitality_base = models.IntegerField(("Základní vitalita"), default=1, blank=True, null=True)
     skill = models.IntegerField(("Zručnost"), default=1, blank=True, null=True)
+    skill_base = models.IntegerField(("Základní zručnost"), default=1, blank=True, null=True)
 
 
     def __str__(self):

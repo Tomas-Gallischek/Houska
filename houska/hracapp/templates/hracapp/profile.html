@@ -18,16 +18,6 @@
     <li>Kroky: {{ request.user.steps }}</li>
     <li>Goldy: {{ request.user.gold }}</li>
   </ul>
-
-  <h2>Aktualizovat kroky</h2>
-  <form method="post">
-      {% csrf_token %}
-      <input type="hidden" name="action" value="update_steps">
-      <label for="steps">Zadejte novou hodnotu kroků:</label>
-      <input type="number" name="steps" id="steps" required>
-      <button type="submit">Aktualizovat</button>
-  </form>
-
   <hr>
 
   <h2>Sběr goldů</h2>
@@ -48,9 +38,12 @@
     </ul>
 {% endif %}
 
+
   <form method="post" action="{% url 'logout-url' %}">
       {% csrf_token %}
       <button type="submit">Odhlásit se</button>
   </form>
   <a href="{% url 'protected-page-url' %}">Chráněná stránka</a>
+
+  
 {% endblock content %}

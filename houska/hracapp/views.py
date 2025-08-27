@@ -10,11 +10,6 @@ from .utils import calculate_xp_and_level, calculate_gold, atributy_funkce
 @login_required
 def profile(request):
 
-    # Pokud uživatel nemá žádné kroky
-    if request.user.steps is None:
-        request.user.steps = 1
-        request.user.save()
-
     # Volání funkce pro LVL
     XP_aktual, lvl_aktual, lvl_next, XP_potrebne_next = calculate_xp_and_level(request.user.steps)
 
@@ -32,22 +27,6 @@ def profile(request):
             request.user.last_gold_collection = timezone.now()
             request.user.save()
             messages.success(request, 'Goldy úspěšně sebrány!')
-            return redirect('profile-url')
-
-        elif action == 'update_steps':
-            try:
-                new_steps = int(request.POST.get('steps'))
-                if new_steps is not None:
-                    if new_steps >= request.user.steps:
-                        request.user.steps = new_steps
-                        request.user.save()
-                        messages.success(request, 'Úspěšně AKTUALIZOVÁNO')
-                    else:
-                        messages.error(request, 'Zadaná hodnota nemůže být menší než aktuální.')
-                else:
-                    messages.error(request, 'Nezadali jste hodnotu kroků.')
-            except (ValueError, TypeError):
-                pass
             return redirect('profile-url')
 
     # Kontext pro render
@@ -74,6 +53,8 @@ def index(request):
     return render(request, 'hracapp/index.html')
 
 def register(request):
+
+    #REGISTRAČNÍ FORMULÁŘ
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -86,3 +67,14 @@ def register(request):
 
 def render_profile(request, context):
     return render(request, 'hracapp/profile.html', context)
+
+def update_steps(request):
+    if request.method == 'POST':
+        new_steps = request.POST.get('steps')
+        if new_steps is not None:
+            request.user.steps = new_steps
+            request.user.save()
+            messages.success(request, 'Kroky byly úspěšně aktualizovány.')
+        else:
+            messages.error(request, 'Nezadali jste platnou hodnotu kroků.')
+    return render(request, 'hracapp/steps_input.html')

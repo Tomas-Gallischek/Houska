@@ -10,15 +10,25 @@ from .models import Playerinfo
 def atributy_funkce(request):
     # Získání atributů uživatele
     user = request.user
+    hp = user.HP
+    charisma = user.charisma
+    dexterity = user.dexterity
+    intelligence = user.intelligence
+    skill = user.skill
+    strength = user.strength
+    vitality = user.vitality
+
     atributy = {
-        'HP': user.HP,
-        'charisma': user.charisma,
-        'dexterity': user.dexterity,
-        'intelligence': user.intelligence,
-        'skill': user.skill,
-        'strength': user.strength,
-        'vitality': user.vitality,
+        'HP': hp,
+        'charisma': charisma,
+        'dexterity': dexterity,
+        'intelligence': intelligence,
+        'skill': skill,
+        'strength': strength,
+        'vitality': vitality,
     }
+
+    user.save()
     return atributy
 
 

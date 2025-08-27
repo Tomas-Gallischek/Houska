@@ -10,4 +10,5 @@ urlpatterns = [
     path('logout', auth_views.LogoutView.as_view(template_name='hracapp/logout.html'), name='logout-url'),
     path('profile', views.profile, name='profile-url'),
     path('protected-page', views.protected_page, name='protected-page-url'),
+    path('update-steps', views.update_steps, name='update-steps-url'),
     ]

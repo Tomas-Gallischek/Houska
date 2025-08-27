@@ -32,10 +32,6 @@ Cena: <span id="cena-charisma">{{ cena_charisma }}</span> goldů<br>
 <p>luck: <span id="luck-value">{{ atributy.luck }}</span> <button class="plus-button" data-attribute="luck">+</button></p>
 Cena: <span id="cena-luck">{{ cena_luck }}</span> goldů<br>
 
-
-
-
-
   <ul>
     <li>Kroky: {{ request.user.steps }}</li>
     <li>Goldy: <span id="gold-value">{{ request.user.gold }}</span></li>
@@ -134,6 +130,15 @@ Cena: <span id="cena-luck">{{ cena_luck }}</span> goldů<br>
                             goldSpan.textContent = data.new_golds;
                         }
                     }
+                    
+                    // AKTUALIZUJE HP
+                    if (data.new_hp) {
+                        const hpSpan = document.getElementById('hp-value');
+                        if (hpSpan) {
+                            hpSpan.textContent = data.new_hp;
+                        }
+                    }
+
                 } else {
                     alert(data.error);
                 }

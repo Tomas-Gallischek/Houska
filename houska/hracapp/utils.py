@@ -13,8 +13,10 @@ from .models import Playerinfo
 def atributy_hodnota(request):
     user = request.user
     rasy_povolani.rasa_bonus(request)
+
     # Výpočet HP
-    hp = ((user.lvl) + (user.lvl*5) + (user.lvl**2)) * user.hp_bonus
+    hp = round((((user.lvl) + (user.lvl*3) + (user.vitality*6))) * user.hp_bonus)
+
     user.hp = hp
 
     # Vypsání atributů z databáze + BASE staty

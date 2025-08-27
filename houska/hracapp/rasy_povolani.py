@@ -4,18 +4,17 @@ from django.contrib.auth import login
 
 @login_required
 def povolani_bonus(request):
-    
-    # SÍLA
-    if request.user.povolani == 'Válečník' or request.user.povolani == 'warrior':
+
+    # SÍLA (DMG -> MID -> TANK)
+    if request.user.povolani == 'Paladin' or request.user.povolani == 'paladin':
+        dmg_atribut = 'strength'
+    elif request.user.povolani == 'Válečník' or request.user.povolani == 'warrior':
         dmg_atribut = 'strength'
         dmg_atribut = 'strength'
     elif request.user.povolani == 'Ničitel' or request.user.povolani == 'berserker':
         dmg_atribut = 'strength'
-    elif request.user.povolani == 'Paladin' or request.user.povolani == 'paladin':
-        dmg_atribut = 'strength'
 
-    # INTELIGENCE
-        dmg_atribut = 'intelligence' 
+    # INTELIGENCE (DMG -> MID -> TANK (heal))
     elif request.user.povolani == 'Mág' or request.user.povolani == 'mage':
         dmg_atribut = 'intelligence'
     elif request.user.povolani == 'Nekromant' or request.user.povolani == 'necromancer':
@@ -24,14 +23,13 @@ def povolani_bonus(request):
     elif request.user.povolani == 'Druid' or request.user.povolani == 'druid':
         dmg_atribut = 'intelligence'
 
-
-    # OBRATNOST
+    # OBRATNOST (DMG -> MID -> TANK)
     elif request.user.povolani == 'Roguna' or request.user.povolani == 'rogue':
         dmg_atribut = 'dexterity'
     elif request.user.povolani == 'Hraničář' or request.user.povolani == 'ranger':
         dmg_atribut = 'dexterity'
     elif request.user.povolani == 'Mnich' or request.user.povolani == 'monk':
-        dmg_atribut = 'wisdom'
+        dmg_atribut = 'dexterity'
 
     else:
         print(" ! NEVYBRALO SE ŽÁDNÉ POVOLÁNÍ !")

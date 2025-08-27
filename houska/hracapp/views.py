@@ -6,6 +6,8 @@ from django.contrib import messages
 from django.utils import timezone
 from .models import Playerinfo
 from .utils import calculate_xp_and_level, calculate_gold, atributy_funkce
+from django.http import JsonResponse
+import json
 
 @login_required
 def profile(request):
@@ -78,3 +80,25 @@ def update_steps(request):
         else:
             messages.error(request, 'Nezadali jste platnou hodnotu kroků.')
     return render(request, 'hracapp/steps_input.html')
+
+@login_required
+def update_attribute(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            attribute_to_update = data.get('attribute')
+            
+            # Zkontroluje, zda je atribut platný a není to HP
+            valid_attributes = ['strength', 'dexterity', 'intelligence', 'charisma', 'vitality', 'skill']
+            if attribute_to_update in valid_attributes:
+                user = request.user
+                current_value = getattr(user, attribute_to_update)
+                setattr(user, attribute_to_update, current_value + 1)
+                user.save()
+                return JsonResponse({'success': True, 'new_value': current_value + 1})
+            else:
+                return JsonResponse({'success': False, 'error': 'Neplatný atribut.'}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Neplatná JSON data.'}, status=400)
+    
+    return JsonResponse({'success': False, 'error': 'Neplatná metoda požadavku.'}, status=405)

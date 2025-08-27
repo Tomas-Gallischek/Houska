@@ -6,13 +6,13 @@
   <p>Potřebné XP pro další úroveň: {{ XP_potrebne_next }}</p>
   <p>Našetřeno XP: {{ XP_aktual }}</p>
 
-  <p>HP: {{ atributy.HP }}</p>
-  <p>Charisma: {{ atributy.charisma }}</p>
-  <p>Dexterity: {{ atributy.dexterity }}</p>
-  <p>Intelligence: {{ atributy.intelligence }}</p>
-  <p>Skill: {{ atributy.skill }}</p>
-  <p>Strength: {{ atributy.strength }}</p>
-  <p>Vitality: {{ atributy.vitality }}</p>
+  <p>HP: <span id="hp-value">{{ atributy.HP }}</span></p>
+  <p>Charisma: <span id="charisma-value">{{ atributy.charisma }}</span> <button class="plus-button" data-attribute="charisma">+</button></p>
+  <p>Dexterity: <span id="dexterity-value">{{ atributy.dexterity }}</span> <button class="plus-button" data-attribute="dexterity">+</button></p>
+  <p>Intelligence: <span id="intelligence-value">{{ atributy.intelligence }}</span> <button class="plus-button" data-attribute="intelligence">+</button></p>
+  <p>Skill: <span id="skill-value">{{ atributy.skill }}</span> <button class="plus-button" data-attribute="skill">+</button></p>
+  <p>Strength: <span id="strength-value">{{ atributy.strength }}</span> <button class="plus-button" data-attribute="strength">+</button></p>
+  <p>Vitality: <span id="vitality-value">{{ atributy.vitality }}</span> <button class="plus-button" data-attribute="vitality">+</button></p>
 
   <ul>
     <li>Kroky: {{ request.user.steps }}</li>
@@ -47,3 +47,35 @@
 
   
 {% endblock content %}
+
+<script>
+    document.querySelectorAll('.plus-button').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const attribute = this.dataset.attribute;
+            const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+            fetch('{% url "update-attribute-url" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ attribute: attribute })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    const attributeSpan = document.getElementById(attribute + '-value');
+                    attributeSpan.textContent = data.new_value;
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Při aktualizaci atributu došlo k chybě.');
+            });
+        });
+    });
+</script>

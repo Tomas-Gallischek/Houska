@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <form method="post" action="{% url 'logout-url' %}">
+      {% csrf_token %}
+      <button type="submit">Odhlásit se</button>
+  </form>
+
+  <h1>{{ request.user.username }}</h1>
+  <p>Aktuální úroveň: {{ lvl_aktual }}</p>
+  <p>Potřebné XP pro další úroveň: {{ XP_potrebne_next }}</p>
+  <p>Našetřeno XP: {{ XP_aktual }}</p>
+
+<p>HP: <span id="hp-value">{{ atributy.HP }}</span></p>
+
+<p>Strength: <span id="strength-value">{{ atributy.strength }}</span> <button class="plus-button" data-attribute="strength">+</button></p>
+Cena: <span id="cena-strength">{{ cena_strength }}</span> goldů<br>
+
+<p>Intelligence: <span id="intelligence-value">{{ atributy.intelligence }}</span> <button class="plus-button" data-attribute="intelligence">+</button></p>
+Cena: <span id="cena-intelligence">{{ cena_intelligence }}</span> goldů<br>
+
+<p>Vitality: <span id="vitality-value">{{ atributy.vitality }}</span> <button class="plus-button" data-attribute="vitality">+</button></p>
+Cena: <span id="cena-vitality">{{ cena_vitality }}</span> goldů<br>
+
+<p>Dexterity: <span id="dexterity-value">{{ atributy.dexterity }}</span> <button class="plus-button" data-attribute="dexterity">+</button></p>
+Cena: <span id="cena-dexterity">{{ cena_dexterity }}</span> goldů<br>
+
+<p>Charisma: <span id="charisma-value">{{ atributy.charisma }}</span> <button class="plus-button" data-attribute="charisma">+</button></p>
+Cena: <span id="cena-charisma">{{ cena_charisma }}</span> goldů<br>
+
+<p>Skill: <span id="skill-value">{{ atributy.skill }}</span> <button class="plus-button" data-attribute="skill">+</button></p>
+Cena: <span id="cena-skill">{{ cena_skill }}</span> goldů<br>
+
+
+
+
+
+  <ul>
+    <li>Kroky: {{ request.user.steps }}</li>
+    <li>Goldy: <span id="gold-value">{{ request.user.gold }}</span></li>
+  </ul>
+  <hr>
+
+  <h2>Sběr goldů</h2>
+  <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="collect_gold">
+      <p>Máte k dispozici k sebrání: <span id="collected-gold">{{ collected_gold }}</span> goldů.</p>
+      <p>Maximální počet goldů: {{ gold_limit }} / 8h</p>
+      <p>Goldy za hodinu: {{ gold_per_hour }} / h</p>
+      <button type="submit">Vybrat goldy</button>
+  </form>
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+  const updateInterval = 1000; // Interval v milisekundách (1000ms = 1 sekunda)
+  const elementToUpdate = document.getElementById('collected-gold'); // ID HTML elementu, který chcete aktualizovat
+
+  function fetchAndUpdateViews() {
+    fetch('/gold_per_second') // Nahraďte '/vasi-url-pro-views' skutečnou URL, která směřuje na views.py
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Chyba sítě - odpověď nebyla ok.');
+        }
+        return response.json(); // Předpokládá se, že views.py vrací JSON
+      })
+      .then(data => {
+        // Zde zpracujete data a aktualizujete HTML element
+        // Předpokládá se, že data jsou objekt s klíčem 'hodnota'
+        elementToUpdate.textContent = data.hodnota; 
+      })
+      .catch(error => {
+        // Tuto část můžete ponechat, pokud chcete interně zpracovat chyby, ale nebudou se vypisovat do konzole.
+        // Můžete sem přidat kód, který například zobrazí uživateli zprávu o chybě na stránce, nebo nic nedělat.
+      });
+  }
+
+  // Spuštění prvního dotazu ihned po načtení stránky
+  fetchAndUpdateViews();
+
+  // Nastavení intervalu pro opakování dotazu každou sekundu
+  setInterval(fetchAndUpdateViews, updateInterval);
+});
+</script>
+
+
+<script>
+    document.querySelectorAll('.plus-button').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const attribute = this.dataset.attribute;
+            const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+            fetch('{% url "update-attribute-url" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ attribute: attribute })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    const attributeSpan = document.getElementById(attribute + '-value');
+                    attributeSpan.textContent = data.new_value;
+                    
+                    // Aktualizuje ceny pro všechny atributy
+                    if (data.new_prices) {
+                        for (const price_attribute in data.new_prices) {
+                            const priceSpan = document.getElementById('cena-' + price_attribute.replace('_price', ''));
+                            if (priceSpan) {
+                                priceSpan.textContent = data.new_prices[price_attribute];
+                            }
+                        }
+                    }
+                    
+                    // Aktualizuje počet goldů
+                    if (data.new_golds) {
+                        const goldSpan = document.getElementById('gold-value');
+                        if (goldSpan) {
+                            goldSpan.textContent = data.new_golds;
+                        }
+                    }
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Při aktualizaci atributu došlo k chybě.');
+            });
+        });
+    });
+</script>
+
+
+{% endblock content %}

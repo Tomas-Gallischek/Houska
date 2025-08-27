@@ -1,9 +1,12 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
+
+@login_required
 def rasa_bonus(request):
-    user = request.user
-    rasa_bonus = 0
+
     koeficient_statu = 3 # JEŠTĚ NEVÍM KOLIK PŘESNĚ BUDOU ZÁKLADNÍ STATY. PÍŠU TO CO BYL ORIGINÁL A PŘÍPADNĚ TO NÁSOBÍM
 
-    if user.rasa == 'human' or user.rasa == 'Člověk':
+    if request.user.rasa == 'Člověk' or request.user.rasa == 'human':
         # OBECNÉ BONUSY
         hp_bonus = 1
         # ZÁKLADNÍ STATY
@@ -14,7 +17,7 @@ def rasa_bonus(request):
         charisma_bonus = 5 * koeficient_statu
         skill_bonus = 3 * koeficient_statu
 
-    elif user.rasa == 'elf' or user.rasa == 'Elf':
+    elif request.user.rasa == 'Elf' or request.user.rasa == 'elf':
         # OBECNÉ BONUSY
         hp_bonus = 0.8
         # ZÁKLADNÍ STATY
@@ -25,7 +28,7 @@ def rasa_bonus(request):
         charisma_bonus = 4 * koeficient_statu
         skill_bonus = 3 * koeficient_statu
 
-    elif user.rasa == 'dwarf' or user.rasa == 'Trpaslík':
+    elif request.user.rasa == 'Trpaslík' or request.user.rasa == 'dwarf':
         # OBECNÉ BONUSY
         hp_bonus = 1.2
         # ZÁKLADNÍ STATY
@@ -36,7 +39,7 @@ def rasa_bonus(request):
         charisma_bonus = 3 * koeficient_statu
         skill_bonus = 6 * koeficient_statu  
 
-    elif user.rasa == 'urgal' or user.rasa == 'Urgal':
+    elif request.user.rasa == 'Urgal' or request.user.rasa == 'urgal':
         # OBECNÉ BONUSY
         hp_bonus = 1.3
         # ZÁKLADNÍ STATY
@@ -47,7 +50,7 @@ def rasa_bonus(request):
         charisma_bonus = 2 * koeficient_statu
         skill_bonus = 2 * koeficient_statu
 
-    elif user.rasa == 'gnóm' or user.rasa == 'Gnóm':
+    elif request.user.rasa == 'Gnóm' or request.user.rasa == 'gnome':
         # OBECNÉ BONUSY
         hp_bonus = 1
         # ZÁKLADNÍ STATY
@@ -58,7 +61,7 @@ def rasa_bonus(request):
         charisma_bonus = 2 * koeficient_statu
         skill_bonus = 5 * koeficient_statu
 
-    elif user.rasa == 'shadow' or user.rasa == 'Stín':
+    elif request.user.rasa == 'Stín' or request.user.rasa == 'shadow':
         # OBECNÉ BONUSY
         hp_bonus = 0.7
         # ZÁKLADNÍ STATY
@@ -68,8 +71,10 @@ def rasa_bonus(request):
         intelligence_bonus = 3 * koeficient_statu
         charisma_bonus = 2 * koeficient_statu
         skill_bonus = 4 * koeficient_statu
+    else:
+        print(" ! NEVYBRALA SE ŽÁDNÁ RASA !")
 
-    request.user.HP_bonus = float(hp_bonus)
+    request.user.hp_bonus = float(hp_bonus)
     request.user.strength_base = float(strength_bonus)
     request.user.vitality_base = float(vitality_bonus)
     request.user.dexterity_base = float(dexterity_bonus)

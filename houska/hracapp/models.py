@@ -14,23 +14,23 @@ class Playerinfo(AbstractUser):
             ('human', 'Člověk'),
             ('elf', 'Elf'),
             ('dwarf', 'Trpaslík'),
-            ('Urgal', 'Urgal'),
-            ('Gnóm', 'Gnóm'),
-            ('Shadow', 'Stín'),
+            ('urgal', 'Urgal'),
+            ('gnóm', 'Gnóm'),
+            ('shadow', 'Stín'),
         )
 
     POVOLANI_CHOICES = (
-            ('Choice:', 'Vyber:'),
-            ('HUNTER', 'Bojovník'),
-            ('PRIEST', 'Kněz'),
-            ('WARRIOR', 'Válečník'),
-            ('PALADIN', 'Paladin'),
-            ('MAGE', 'Mág'),
-            ('ROGUE', 'Roguna'),
-            ('NECROMANCER', 'Nekromant'),
-            ('BERSERKER', 'Ničitel'),
-            ('WARLOCK', 'Temný mág'),
-            ('DRUID', 'Druid')
+            ('choice:', 'Vyber:'),
+            ('hunter', 'Bojovník'),
+            ('priest', 'Kněz'),
+            ('warrior', 'Válečník'),
+            ('paladin', 'Paladin'),
+            ('mage', 'Mág'),
+            ('rogue', 'Roguna'),
+            ('necromancer', 'Nekromant'),
+            ('berserker', 'Ničitel'),
+            ('warlock', 'Temný mág'),
+            ('druid', 'Druid')
         )
 
     # OSOBNÍ INFORMACE O HRÁČI

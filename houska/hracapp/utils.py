@@ -12,7 +12,7 @@ from .models import Playerinfo
 @login_required
 def atributy_funkce(request):
     user = request.user
-
+    rasy_povolani.rasa_bonus(request)
     # Výpočet HP
     hp = ((user.lvl) + (user.lvl*5) + (user.lvl**2)) * user.hp_bonus
     user.hp = hp
@@ -50,12 +50,12 @@ def atributy_cena(request):
     strength = user['strength']
     vitality = user['vitality']
 
-    charisma_price = charisma + (charisma * 1.5)
-    dexterity_price = dexterity + (dexterity * 1.5)
-    intelligence_price = intelligence + (intelligence * 1.5)
-    skill_price = skill + (skill * 1.5)
-    strength_price = strength + (strength * 1.5)
-    vitality_price = vitality + (vitality * 1.5)
+    charisma_price = (charisma - request.user.charisma_base) + ((charisma - request.user.charisma_base) * 1.5)
+    dexterity_price = (dexterity - request.user.dexterity_base) + ((dexterity - request.user.dexterity_base) * 1.5)
+    intelligence_price = (intelligence - request.user.intelligence_base) + ((intelligence - request.user.intelligence_base) * 1.5)
+    skill_price = (skill - request.user.skill_base) + ((skill - request.user.skill_base) * 1.5)
+    strength_price = (strength - request.user.strength_base) + ((strength - request.user.strength_base) * 1.5)
+    vitality_price = (vitality - request.user.vitality_base) + ((vitality - request.user.vitality_base) * 1.5)
 
     cena = {
         'charisma_price': int(charisma_price),

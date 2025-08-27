@@ -13,7 +13,7 @@ from .utils import atributy_cena, calculate_xp_and_level, calculate_gold, atribu
 def profile(request):
 
     # Volání funkce pro LVL
-    XP_aktual, lvl_aktual, lvl_next, XP_potrebne_next = calculate_xp_and_level(request.user.steps)
+    XP_aktual, lvl_aktual, lvl_next, XP_potrebne_next = calculate_xp_and_level(request)
 
     # Volání funkce pro Gold
     collected_gold, gold_growth_coefficient, gold_limit, gold_per_hour = calculate_gold(request.user, lvl_aktual)

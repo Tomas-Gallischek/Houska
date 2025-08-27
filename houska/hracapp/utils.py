@@ -8,17 +8,19 @@ from .models import Playerinfo
 
 
 def atributy_funkce(request):
-    # Získání atributů uživatele
     user = request.user
-    hp = user.HP
+
+    # Výpočet HP
+    hp = (user.lvl) + (user.lvl*5) + (user.lvl**2)
+    user.hp = hp
+
+    # Vypsání atributů z databáze
     charisma = user.charisma
     dexterity = user.dexterity
     intelligence = user.intelligence
     skill = user.skill
     strength = user.strength
     vitality = user.vitality
-
-
 
     atributy = {
         'HP': int(hp),
@@ -63,9 +65,9 @@ def atributy_cena(request):
 
     return cena
 
-def calculate_xp_and_level(steps):
-    if steps is None:
-        steps = 0
+def calculate_xp_and_level(request):
+    user = request.user
+    steps = user.steps if user.steps is not None else 0
     XP_aktual = steps
     lvl_aktual = 1
     lvl_next = 2
@@ -79,6 +81,9 @@ def calculate_xp_and_level(steps):
             lvl_next = lvl_aktual + 1
             XP_potrebne_next = round((22*lvl_next)*((lvl_next**1.1)))
         else:
+            user.xp = XP_aktual
+            user.lvl = lvl_aktual
+            user.save()
             break
 
     return XP_aktual, lvl_aktual, lvl_next, XP_potrebne_next

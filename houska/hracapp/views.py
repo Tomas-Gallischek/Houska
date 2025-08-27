@@ -2,31 +2,24 @@ from django.shortcuts import render, redirect
 from .forms import RegistrationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
-from .models import CustomUser
 from django.contrib import messages
-import datetime
 from django.utils import timezone
 
-
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.utils import timezone
-from django.contrib import messages
-
-
-def calculate_xp_and_level(orders):
-    XP_aktual = orders
+def calculate_xp_and_level(steps):
+    if steps is None:
+        steps = 0
+    XP_aktual = steps
     lvl_aktual = 1
     lvl_next = 2
-    XP_potrebne_next = round(100 + (lvl_aktual ** 2.2))
+    XP_potrebne_next = round((22*lvl_aktual)*((lvl_next)*1.1))
 
-    for lvl in range(1, 100):
-        XP_potrebne = round(100 + (lvl ** 2.2))
+    for lvl in range(1, 500):
+        XP_potrebne = round((22*lvl)*((lvl**1.1)))
         if XP_aktual >= XP_potrebne:
             XP_aktual -= XP_potrebne
             lvl_aktual += 1
             lvl_next = lvl_aktual + 1
-            XP_potrebne_next = round(100 + ((lvl + 1) ** 2.2))
+            XP_potrebne_next = round((22*lvl_next)*((lvl_next**1.1)))
         else:
             break
 
@@ -37,13 +30,13 @@ def calculate_gold(user, lvl_aktual):
     # Koeficient růstu goldů
     if user.gold_growth_coefficient is not None:
         if lvl_aktual == 1:
-            gold_growth_coefficient = 1
+            gold_growth_coefficient = 0.1
         else:
-            gold_growth_coefficient = 1 + (lvl_aktual / 2)
+            gold_growth_coefficient = (lvl_aktual / 10)
         user.gold_growth_coefficient = gold_growth_coefficient
         user.save()
     else:
-        gold_growth_coefficient = 1
+        gold_growth_coefficient = 0.1
 
     # VÝPOČET NASBÍRANÝCH GOLDŮ
     time_since_last_collection = timezone.now() - user.last_gold_collection
@@ -63,13 +56,13 @@ def render_profile(request, context):
 @login_required
 def profile(request):
 
-    # Pokud uživatel nemá žádné objednávky
-    if request.user.orders is None:
-        request.user.orders = 1
+    # Pokud uživatel nemá žádné kroky
+    if request.user.steps is None:
+        request.user.steps = 1
         request.user.save()
 
     # Výpočet XP a levelu
-    XP_aktual, lvl_aktual, lvl_next, XP_potrebne_next = calculate_xp_and_level(request.user.orders)
+    XP_aktual, lvl_aktual, lvl_next, XP_potrebne_next = calculate_xp_and_level(request.user.steps)
 
     # Výpočet goldů
     collected_gold, gold_growth_coefficient, gold_limit, gold_per_hour = calculate_gold(request.user, lvl_aktual)
@@ -84,18 +77,18 @@ def profile(request):
             messages.success(request, 'Goldy úspěšně sebrány!')
             return redirect('profile-url')
 
-        elif action == 'update_orders':
+        elif action == 'update_steps':
             try:
-                new_orders = int(request.POST.get('orders'))
-                if new_orders is not None:
-                    if new_orders >= request.user.orders:
-                        request.user.orders = new_orders
+                new_steps = int(request.POST.get('steps'))
+                if new_steps is not None:
+                    if new_steps >= request.user.steps:
+                        request.user.steps = new_steps
                         request.user.save()
                         messages.success(request, 'Úspěšně AKTUALIZOVÁNO')
                     else:
                         messages.error(request, 'Zadaná hodnota nemůže být menší než aktuální.')
                 else:
-                    messages.error(request, 'Nezadali jste hodnotu objednávek.')
+                    messages.error(request, 'Nezadali jste hodnotu kroků.')
             except (ValueError, TypeError):
                 pass
             return redirect('profile-url')

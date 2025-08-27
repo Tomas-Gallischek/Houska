@@ -15,9 +15,9 @@ class RegistrationForm(UserCreationForm):
         ('other', 'Jiné'),
     )
     gender = forms.ChoiceField(label="Pohlaví", choices=GENDER_CHOICES, required=False)
-    orders = forms.IntegerField(label="Objednávky", required=False)
+    steps = forms.IntegerField(label="Kroky", required=False)
 
 
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = UserCreationForm.Meta.fields + ('gender', 'name', 'surname', 'email', 'orders')
+        fields = UserCreationForm.Meta.fields + ('gender', 'name', 'surname', 'email', 'steps')

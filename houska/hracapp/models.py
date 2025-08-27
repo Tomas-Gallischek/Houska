@@ -10,7 +10,7 @@ class CustomUser(AbstractUser):
         ('other', 'Jiné'),
     )
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=True, null=True)
-    orders = models.IntegerField(("Počet objednávek"), blank=True, null=True)
+    steps = models.IntegerField(("Počet kroků"), blank=True, null=True)
     gold = models.IntegerField(("Počet GOLDŮ"), default=1)
     rohlik = models.IntegerField(("Počet ROHLÍKŮ"), default=1)
     gold_growth_coefficient = models.FloatField(("Koeficient růstu GOLDŮ"), default=1.0)

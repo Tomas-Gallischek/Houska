@@ -54,18 +54,30 @@ class Playerinfo(AbstractUser):
     # ATRIBUTY HRÁČOVY POSTAVY
     HP = models.IntegerField(("Počet životů"), default=10, blank=True, null=True)
     hp_bonus = models.FloatField(("Bonus k životům"), default=1, blank=True, null=True)
-    strength = models.IntegerField(("Síla"), default=1, blank=True, null=True)
+
+    suma_strength = models.IntegerField(("Síla"), default=1, blank=True, null=True)
     strength_base = models.IntegerField(("Základní síla"), default=1, blank=True, null=True)
-    dexterity = models.IntegerField(("Obratnost"), default=1, blank=True, null=True)
+    strength_plus = models.IntegerField(("plus k síle"), default=0, blank=True, null=True)
+
+    suma_dexterity = models.IntegerField(("Obratnost"), default=1, blank=True, null=True)
     dexterity_base = models.IntegerField(("Základní obratnost"), default=1, blank=True, null=True)
-    intelligence = models.IntegerField(("Inteligence"), default=1, blank=True, null=True)
+    dexterity_plus = models.IntegerField(("plus k obratnosti"), default=0, blank=True, null=True)
+
+    suma_intelligence = models.IntegerField(("Inteligence"), default=1, blank=True, null=True)
     intelligence_base = models.IntegerField(("Základní inteligence"), default=1, blank=True, null=True)
-    charisma = models.IntegerField(("Charisma"), default=1, blank=True, null=True)
+    intelligence_plus = models.IntegerField(("plus k inteligenci"), default=0, blank=True, null=True)
+
+    suma_charisma = models.IntegerField(("Charisma"), default=1, blank=True, null=True)
     charisma_base = models.IntegerField(("Základní charisma"), default=1, blank=True, null=True)
-    vitality = models.IntegerField(("Vitalita"), default=1, blank=True, null=True)
+    charisma_plus = models.IntegerField(("plus k charismatu"), default=0, blank=True, null=True)
+
+    suma_vitality = models.IntegerField(("Vitalita"), default=1, blank=True, null=True)
     vitality_base = models.IntegerField(("Základní vitalita"), default=1, blank=True, null=True)
-    luck = models.IntegerField(("Zručnost"), default=1, blank=True, null=True)
+    vitality_plus = models.IntegerField(("plus k vitalitě"), default=0, blank=True, null=True)
+
+    suma_luck = models.IntegerField(("Zručnost"), default=1, blank=True, null=True)
     luck_base = models.IntegerField(("Základní zručnost"), default=1, blank=True, null=True)
+    luck_plus = models.IntegerField(("plus k zručnosti"), default=0, blank=True, null=True)
 
     dmg_atribut = models.CharField(max_length=20, blank=True, null=True)
 

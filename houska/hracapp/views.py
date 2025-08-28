@@ -20,22 +20,22 @@ def profile(request):
     povolani_bonus(request)
     rasa_bonus(request)
 
-    # Ofenzivní a defenzivní statistiky
-    crit_chance, center_dmg, min_dmg, max_dmg, weapon_typ = fight_off(request)
-    heavy_res, magic_res, light_res, dodge_chance = fight_def(request)
-    inicial_number = iniciace(request)
+    # Volání funkce pro atributy
+    suma_atributy, base_atributy, plus_atributy = atributy_hodnota(request)
+
+    # Volání funkce pro cenu atributů
+    atributy_cost = atributy_cena(request)
 
     # Volání funkce pro LVL
-    XP_aktual, lvl_aktual, lvl_next, XP_potrebne_next = calculate_xp_and_level(request)
+    XP_aktual, lvl_aktual, lvl_next, XP_potrebne_next  = calculate_xp_and_level(request)
 
     # Volání funkce pro Gold
     collected_gold, gold_growth_coefficient, gold_limit, gold_per_hour = calculate_gold(request.user, lvl_aktual)
 
-    # Volání funkce pro atributy
-    atributy = atributy_hodnota(request)
-
-    #volání funkce pro CENU ATRIBUTŮ
-    cena_atributu = atributy_cena(request)
+    # Ofenzivní a defenzivní statistiky
+    crit_chance, center_dmg, min_dmg, max_dmg, weapon_typ = fight_off(request)
+    heavy_res, magic_res, light_res, dodge_chance = fight_def(request)
+    inicial_number = iniciace(request)
 
     # POST formuláře
     if request.method == 'POST':
@@ -49,28 +49,57 @@ def profile(request):
 
     # Kontext pro render
     context = {
+    # XP A LVL
         'XP_aktual': XP_aktual,
         'lvl_aktual': lvl_aktual,
         'lvl_next': lvl_next,
         'XP_potrebne_next': XP_potrebne_next,
+    # GOLDY
         'collected_gold': collected_gold,
         'gold_growth_coefficient': gold_growth_coefficient,
         'gold_limit': gold_limit,
         'gold_per_hour': gold_per_hour,
-        'atributy': atributy,
-        'cena_charisma': cena_atributu['charisma_price'],
-        'cena_dexterity': cena_atributu['dexterity_price'],
-        'cena_intelligence': cena_atributu['intelligence_price'],
-        'cena_luck': cena_atributu['luck_price'],
-        'cena_strength': cena_atributu['strength_price'],
-        'cena_vitality': cena_atributu['vitality_price'],
+    # ATRIBUTY - BASE
+        'base_hp': base_atributy["base_hp"],
+        'base_strength': base_atributy["base_strength"],
+        'base_dexterity': base_atributy["base_dexterity"],
+        'base_intelligence': base_atributy["base_intelligence"],
+        'base_charisma': base_atributy["base_charisma"],
+        'base_vitality': base_atributy["base_vitality"],
+        'base_luck': base_atributy["base_luck"],
+    # ATRIBUTY - PLUS
+        'plus_hp': plus_atributy["plus_hp"],
+        'plus_strength': plus_atributy["plus_strength"],
+        'plus_dexterity': plus_atributy["plus_dexterity"],
+        'plus_intelligence': plus_atributy["plus_intelligence"],
+        'plus_charisma': plus_atributy["plus_charisma"],
+        'plus_vitality': plus_atributy["plus_vitality"],
+        'plus_luck': plus_atributy["plus_luck"],
+    # ATRIBUTY - SUMA
+        'suma_hp': suma_atributy["suma_hp"],
+        'suma_strength': suma_atributy["suma_strength"],
+        'suma_dexterity': suma_atributy["suma_dexterity"],
+        'suma_intelligence': suma_atributy["suma_intelligence"],
+        'suma_charisma': suma_atributy["suma_charisma"],
+        'suma_vitality': suma_atributy["suma_vitality"],
+        'suma_luck': suma_atributy["suma_luck"],
+    # ATRIBUTY - CENA
+        'strength_cost': atributy_cost["strength_cost"],
+        'dexterity_cost': atributy_cost["dexterity_cost"],
+        'intelligence_cost': atributy_cost["intelligence_cost"],
+        'charisma_cost': atributy_cost["charisma_cost"],
+        'vitality_cost': atributy_cost["vitality_cost"],
+        'luck_cost': atributy_cost["luck_cost"],
+    # OFF 
+        'crit_chance': crit_chance,
+        'center_dmg': center_dmg,
+        'weapon_typ': weapon_typ,
+    # DEF
         'heavy_res': heavy_res,
         'magic_res': magic_res,
         'light_res': light_res,
         'dodge_chance': dodge_chance,
-        'crit_chance': crit_chance,
-        'center_dmg': center_dmg,
-        'weapon_typ': weapon_typ,
+    # OSTATNÍ
         'inicial_number': inicial_number,
     }
 
@@ -130,21 +159,30 @@ def update_attribute(request):
 
                 # Získáme aktuální ceny
                 current_prices = atributy_cena(request)
-                atribut_bill = current_prices.get(f'{attribute_to_update}_price')
+                atribut_bill = current_prices.get(f'{attribute_to_update}_cost')
 
                 # Kontrola dostatku goldů
                 if user.gold < atribut_bill:
                     return JsonResponse({'success': False, 'error': 'Nedostatek zlata.'})
 
                 # Odečtení ceny atributu z uživatelských goldů a uložení
-                user.gold -= atribut_bill
-                user.save()
+                else:
+                    user.gold -= atribut_bill
+                    user.save()
 
                 # Aktualizace atributu a uložení
-                current_value = getattr(user, attribute_to_update)
-                new_value = current_value + 1
-                setattr(user, attribute_to_update, new_value)
-                user.save()
+                if attribute_to_update == 'strength':
+                    new_value = user.suma_strength + 1
+                if attribute_to_update == 'dexterity':
+                    new_value = user.suma_dexterity + 1
+                if attribute_to_update == 'intelligence':
+                    new_value = user.suma_intelligence + 1
+                if attribute_to_update == 'charisma':
+                    new_value = user.suma_charisma + 1
+                if attribute_to_update == 'vitality':
+                    new_value = user.suma_vitality + 1
+                if attribute_to_update == 'luck':
+                    new_value = user.suma_luck + 1
 
                 # Vypočítá nové ceny a hodnoty atributů po aktualizaci
                 new_prices = atributy_cena(request)

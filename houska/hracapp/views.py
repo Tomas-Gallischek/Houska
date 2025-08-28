@@ -112,6 +112,24 @@ def update_steps(request):
     return render(request, 'hracapp/steps_input.html')
 
 
+# houska/hracapp/views.py
+import json
+from urllib import request
+from django import utils
+from django.shortcuts import render, redirect
+from .off_deff import fight_def, fight_off, iniciace
+from .rasy_povolani import povolani_bonus, rasa_bonus
+from .forms import RegistrationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
+from django.contrib import messages
+from django.utils import timezone
+from .models import Playerinfo
+from django.http import JsonResponse
+from .utils import calculate_xp_and_level, calculate_gold, atributy_hodnota, atributy_cena
+
+
+#...
 @login_required
 def update_attribute(request):
     if request.method == 'POST':
@@ -128,7 +146,7 @@ def update_attribute(request):
                 old_prices = atributy_cena(request)
                 atribut_bill = old_prices.get(f'{attribute_to_update}_price')
                 if user.gold < atribut_bill:
-                    return JsonResponse({'success': False, 'error': 'Nedostatek zlata.'}, status=400)
+                    return JsonResponse({'success': False, 'error': 'Nedostatek zlata.'})
                 user.gold -= atribut_bill
                 user.save()
                 new_golds = user.gold
@@ -140,10 +158,12 @@ def update_attribute(request):
 
                 # Vypočítá nové ceny atributů
                 new_prices = atributy_cena(request)
-
+                
+                # new_hp je definována pouze, pokud je aktualizována vitalita
+                new_hp = None
                 if attribute_to_update == 'vitality':
                     atributy = atributy_hodnota(request)
-                    new_hp = atributy.HP
+                    new_hp = atributy['HP']
 
                 return JsonResponse({'success': True, 'new_value': current_value + 1, 'new_prices': new_prices, 'new_golds': new_golds, 'new_hp': new_hp})
             else:
@@ -152,6 +172,7 @@ def update_attribute(request):
             return JsonResponse({'success': False, 'error': 'Neplatná JSON data.'}, status=400)
     
     return JsonResponse({'success': False, 'error': 'Neplatná metoda požadavku.'}, status=405)
+#...
 
 @login_required
 def gold_per_second(request):

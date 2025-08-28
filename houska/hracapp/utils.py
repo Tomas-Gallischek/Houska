@@ -15,7 +15,8 @@ def atributy_hodnota(request):
     rasy_povolani.rasa_bonus(request)
 
     # Výpočet HP
-    hp = round((((user.lvl) + (user.lvl*3) + (user.vitality*6))) * user.hp_bonus)
+    hp_bonus_procenta = round(user.vitality/10, 2)
+    hp = round(((((user.lvl) + (user.lvl*3))) * user.hp_bonus)*(hp_bonus_procenta)) # <-- 10 vit = +1%
 
     user.hp = hp
 
@@ -35,6 +36,7 @@ def atributy_hodnota(request):
         'luck': int(luck),
         'strength': int(strength),
         'vitality': int(vitality),
+        'hp_bonus_procenta': int(hp_bonus_procenta)
     }
 
 

@@ -3,7 +3,9 @@ import random
 
 def iniciace(request):
     user = request.user
-    inicial_number = user.charisma + random.randint(1, (round(user.charisma/10)))
+    inicial_number = round((user.charisma * 4) / (user.lvl), 2) # <-- % ŠANCE NA INICIATIVU (maximální honota 100 tj. 100%)
+    if inicial_number > 100:
+        inicial_number = 100
     return inicial_number
 
 def fight_off(request):
@@ -12,13 +14,13 @@ def fight_off(request):
     # INFORMACÉ O HRÁČI
     lvl = user.lvl
     rasa = user.rasa
-    pohlavi = user.pohlavi
+    povolani = user.povolani
     dmg_atribut = user.dmg_atribut
 
     # ATRIBUTY POSTAVY (pouze výpis)
-    strength = user.strength # FYZICKÝ DMG
-    dexterity = user.dexterity # BASIC DMG
-    intelligence = user.intelligence # MAGICKÝ DMG
+    strength = user.strength # POŠKOZENÍ TĚŽKÝMI ZBRANĚMI
+    dexterity = user.dexterity # POŠKOZENÍ LEHKÝMI ZBRANĚMI
+    intelligence = user.intelligence # POŠKOZENÍ MAGICKÝMI ZBRANĚMI
     luck = user.luck  # ŠANCE NA KRITICKÝ ZÁSAH
 
     # ZBRAŇ (DOVYTVOŘIT)
@@ -48,16 +50,15 @@ def fight_off(request):
     if crit_chance < 1:
         crit_chance = 1
 
-    return crit_chance, center_dmg, min_dmg, max_dmg
+    return crit_chance, center_dmg, min_dmg, max_dmg, weapon_typ
 
 def fight_def(request):
     user = request.user
 
     # INFORMACÉ O HRÁČI
     lvl = user.lvl
-    hp = user.hp
     rasa = user.rasa
-    pohlavi = user.pohlavi
+    povolani = user.povolani
 
     # ATRIBUTY POSTAVY (pouze výpis)
     strength = user.strength # REZISTENCE PROTI TĚŽKÝM ZBRANÍM
@@ -74,4 +75,4 @@ def fight_def(request):
 
     dodge_chance = round(((luck / 2) / (user.lvl / 3)) / 2, 2)
 
-    return heavy_res, magic_res, light_res, dodge_chance, hp
+    return heavy_res, magic_res, light_res, dodge_chance

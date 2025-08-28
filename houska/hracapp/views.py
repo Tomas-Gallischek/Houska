@@ -2,6 +2,7 @@ import json
 from urllib import request
 from django import utils
 from django.shortcuts import render, redirect
+from .off_deff import fight_def, fight_off, iniciace
 from .rasy_povolani import povolani_bonus, rasa_bonus
 from .forms import RegistrationForm
 from django.contrib.auth.decorators import login_required
@@ -19,6 +20,11 @@ def profile(request):
     # Inicializace RASY A POVOLÁNÍ
     povolani_bonus(request)
     rasa_bonus(request)
+
+    # Ofenzivní a defenzivní statistiky
+    crit_chance, center_dmg, min_dmg, max_dmg, weapon_typ = fight_off(request)
+    heavy_res, magic_res, light_res, dodge_chance = fight_def(request)
+    inicial_number = iniciace(request)
 
     # Volání funkce pro LVL
     XP_aktual, lvl_aktual, lvl_next, XP_potrebne_next = calculate_xp_and_level(request)
@@ -59,7 +65,14 @@ def profile(request):
         'cena_luck': cena_atributu['luck_price'],
         'cena_strength': cena_atributu['strength_price'],
         'cena_vitality': cena_atributu['vitality_price'],
-
+        'heavy_res': heavy_res,
+        'magic_res': magic_res,
+        'light_res': light_res,
+        'dodge_chance': dodge_chance,
+        'crit_chance': crit_chance,
+        'center_dmg': center_dmg,
+        'weapon_typ': weapon_typ,
+        'inicial_number': inicial_number,
     }
 
     return render_profile(request, context)

@@ -3,7 +3,7 @@ import random
 
 def iniciace(request):
     user = request.user
-    inicial_number = round((user.charisma * 4) / (user.lvl), 2) # <-- % ŠANCE NA INICIATIVU (maximální honota 100 tj. 100%)
+    inicial_number = round((user.suma_charisma * 4) / (user.lvl), 2) # <-- % ŠANCE NA INICIATIVU (maximální honota 100 tj. 100%)
     if inicial_number > 100:
         inicial_number = 100
     return inicial_number
@@ -18,10 +18,10 @@ def fight_off(request):
     dmg_atribut = user.dmg_atribut
 
     # ATRIBUTY POSTAVY (pouze výpis)
-    strength = user.strength # POŠKOZENÍ TĚŽKÝMI ZBRANĚMI
-    dexterity = user.dexterity # POŠKOZENÍ LEHKÝMI ZBRANĚMI
-    intelligence = user.intelligence # POŠKOZENÍ MAGICKÝMI ZBRANĚMI
-    luck = user.luck  # ŠANCE NA KRITICKÝ ZÁSAH
+    strength = user.suma_strength # POŠKOZENÍ TĚŽKÝMI ZBRANĚMI
+    dexterity = user.suma_dexterity # POŠKOZENÍ LEHKÝMI ZBRANĚMI
+    intelligence = user.suma_intelligence # POŠKOZENÍ MAGICKÝMI ZBRANĚMI
+    luck = user.suma_luck  # ŠANCE NA KRITICKÝ ZÁSAH
 
     # ZBRAŇ (DOVYTVOŘIT)
     #weapon = user.weapon
@@ -61,10 +61,10 @@ def fight_def(request):
     povolani = user.povolani
 
     # ATRIBUTY POSTAVY (pouze výpis)
-    strength = user.strength # REZISTENCE PROTI TĚŽKÝM ZBRANÍM
-    intelligence = user.intelligence # REZISTENCE PROTI MAGICKÝM ZBRANÍM
-    dexterity = user.dexterity # REZISTENCE PROTI LEHKÝM ZBRANÍM
-    luck = user.luck  # ŠANCE NA ÚHYB
+    strength = user.suma_strength # REZISTENCE PROTI TĚŽKÝM ZBRANÍM
+    intelligence = user.suma_intelligence # REZISTENCE PROTI MAGICKÝM ZBRANÍM
+    dexterity = user.suma_dexterity # REZISTENCE PROTI LEHKÝM ZBRANÍM
+    luck = user.suma_luck  # ŠANCE NA ÚHYB
 
     # ZBROJ (DOVYTVOŘIT)
     #armor = user.armor

@@ -12,62 +12,62 @@
   <p>Potřebné XP pro další úroveň: {{ XP_potrebne_next }}</p>
   <p>Našetřeno XP: {{ XP_aktual }}</p>
 
-<p>HP: <span id="hp-value">{{ atributy.HP }}</span></p>
+<p>HP: <span id="hp-value">{{ suma_hp }}</span></p>
 
 {% if weapon_typ == "heavy" %}
-<b>Síla: <span id="strength-value">{{ atributy.strength }}</span> <button class="plus-button" data-attribute="strength">+</button></p></b>
-Cena: <span id="cena-strength">{{ cena_strength }}</span> goldů<br><p>
+<b>Síla: <span id="strength-value">{{ suma_strength }}</span> <button class="plus-button" data-attribute="strength">+</button></p></b>
+Cena: <span id="cena-strength">{{ strength_cost }}</span> goldů<br><p>
 Průměrné poškození: {{ center_dmg }}<br>
 Odolnost proti těžkým zbraním: {{ heavy_res }}%<br>
 
-<p>Inteligence: <span id="intelligence-value">{{ atributy.intelligence }}</span> <button class="plus-button" data-attribute="intelligence">+</button></p>
-Cena: <span id="cena-intelligence">{{ cena_intelligence }}</span> goldů<br>
+<p>Inteligence: <span id="intelligence-value">{{ suma_intelligence }}</span> <button class="plus-button" data-attribute="intelligence">+</button></p>
+Cena: <span id="cena-intelligence">{{ intelligence_cost }}</span> goldů<br>
 odolnost proti magickým zbraním: {{ magic_res }}%<br>
 
-<p>Obratnost: <span id="dexterity-value">{{ atributy.dexterity }}</span> <button class="plus-button" data-attribute="dexterity">+</button></p>
-Cena: <span id="cena-dexterity">{{ cena_dexterity }}</span> goldů<br>
+<p>Obratnost: <span id="dexterity-value">{{ suma_dexterity }}</span> <button class="plus-button" data-attribute="dexterity">+</button></p>
+Cena: <span id="cena-dexterity">{{ dexterity_cost }}</span> goldů<br>
 Odolnost proti lehkým zbraním: {{ light_res }}%<br>
 
 {% elif weapon_typ == "light" %}
-<p>Obratnost: <span id="dexterity-value">{{ atributy.dexterity }}</span> <button class="plus-button" data-attribute="dexterity">+</button></p>
-Cena: <span id="cena-dexterity">{{ cena_dexterity }}</span> goldů<br>
+<p>Obratnost: <span id="dexterity-value">{{ suma_dexterity }}</span> <button class="plus-button" data-attribute="dexterity">+</button></p>
+Cena: <span id="cena-dexterity">{{ dexterity_cost }}</span> goldů<br>
 Průměrné poškození: {{ center_dmg }}<br>
 Odolnost proti lehkým zbraním: {{ light_res }}%<br>
 
-<b>Síla: <span id="strength-value">{{ atributy.strength }}</span> <button class="plus-button" data-attribute="strength">+</button></p>
-Cena: <span id="cena-strength">{{ cena_strength }}</span> goldů<br></b><p>
+<b>Síla: <span id="strength-value">{{ suma_strength }}</span> <button class="plus-button" data-attribute="strength">+</button></p>
+Cena: <span id="cena-strength">{{ strength_cost }}</span> goldů<br></b><p>
 Odolnost proti těžkým zbraním: {{ heavy_res }}%<br>
 
-<p>Inteligence: <span id="intelligence-value">{{ atributy.intelligence }}</span> <button class="plus-button" data-attribute="intelligence">+</button></p>
-Cena: <span id="cena-intelligence">{{ cena_intelligence }}</span> goldů<br>
+<p>Inteligence: <span id="intelligence-value">{{ suma_intelligence }}</span> <button class="plus-button" data-attribute="intelligence">+</button></p>
+Cena: <span id="cena-intelligence">{{ intelligence_cost }}</span> goldů<br>
 Odolnost proti magickým zbraním: {{ magic_res }}%<br>
 
 {% elif weapon_typ == "magic" %}
-<p>Inteligence: <span id="intelligence-value">{{ atributy.intelligence }}</span> <button class="plus-button" data-attribute="intelligence">+</button></p>
-Cena: <span id="cena-intelligence">{{ cena_intelligence }}</span> goldů<br>
+<p>Inteligence: <span id="intelligence-value">{{ suma_intelligence }}</span> <button class="plus-button" data-attribute="intelligence">+</button></p>
+Cena: <span id="cena-intelligence">{{ intelligence_cost }}</span> goldů<br>
 Průměrné poškození: {{ center_dmg }}<br>
 Odolnost proti magickým zbraním: {{ magic_res }}%<br>
 
-<b>Síla: <span id="strength-value">{{ atributy.strength }}</span> <button class="plus-button" data-attribute="strength">+</button></p>
-Cena: <span id="cena-strength">{{ cena_strength }}</span> goldů<br></b><p>
+<b>Síla: <span id="strength-value">{{ suma_strength }}</span> <button class="plus-button" data-attribute="strength">+</button></p>
+Cena: <span id="cena-strength">{{ strength_cost }}</span> goldů<br></b><p>
 Odolnost proti těžkým zbraním: {{ heavy_res }}%<br>
 
-<p>Obratnost: <span id="dexterity-value">{{ atributy.dexterity }}</span> <button class="plus-button" data-attribute="dexterity">+</button></p>
-Cena: <span id="cena-dexterity">{{ cena_dexterity }}</span> goldů<br>
+<p>Obratnost: <span id="dexterity-value">{{ suma_dexterity }}</span> <button class="plus-button" data-attribute="dexterity">+</button></p>
+Cena: <span id="cena-dexterity">{{ dexterity_cost }}</span> goldů<br>
 Odolnost proti lehkým zbraním: {{ light_res }}%<br>
 
 {% endif %}
 
-<p>Vitalita: <span id="vitality-value">{{ atributy.vitality }}</span> <button class="plus-button" data-attribute="vitality">+</button></p>
-Cena: <span id="cena-vitality">{{ cena_vitality }}</span> goldů<br>
+<p>Vitalita: <span id="vitality-value">{{ suma_vitality }}</span> <button class="plus-button" data-attribute="vitality">+</button></p>
+Cena: <span id="cena-vitality">{{ vitality_cost }}</span> goldů<br>
 BONUS K ŽIVOTŮM: {{ atributy.hp_bonus_procenta }}%<br>
 
-<p>Charisma: <span id="charisma-value">{{ atributy.charisma }}</span> <button class="plus-button" data-attribute="charisma">+</button></p>
-Cena: <span id="cena-charisma">{{ cena_charisma }}</span> goldů<br>
+<p>Charisma: <span id="charisma-value">{{ suma_charisma }}</span> <button class="plus-button" data-attribute="charisma">+</button></p>
+Cena: <span id="cena-charisma">{{ charisma_cost }}</span> goldů<br>
 Šance na první úder: {{ inicial_number }}%<br>
 
-<p>Štěstí: <span id="luck-value">{{ atributy.luck }}</span> <button class="plus-button" data-attribute="luck">+</button></p>
-Cena: <span id="cena-luck">{{ cena_luck }}</span> goldů<br>
+<p>Štěstí: <span id="luck-value">{{ suma_luck }}</span> <button class="plus-button" data-attribute="luck">+</button></p>
+Cena: <span id="cena-luck">{{ luck_cost }}</span> goldů<br>
 Šance na kritický zásah: {{ crit_chance }}%<br>
 
   <ul>

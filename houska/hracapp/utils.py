@@ -54,48 +54,48 @@ def atributy_hodnota(request):
     user.save()
 
     base_atributy = {
-        "base_hp": base_hp,
-        "base_strength": base_strength,
-        "base_dexterity": base_dexterity,
-        "base_intelligence": base_intelligence,
-        "base_charisma": base_charisma,
-        "base_vitality": base_vitality,
-        "base_luck": base_luck
+        "base_hp": int(base_hp),
+        "base_strength": int(base_strength),
+        "base_dexterity": int(base_dexterity),
+        "base_intelligence": int(base_intelligence),
+        "base_charisma": int(base_charisma),
+        "base_vitality": int(base_vitality),
+        "base_luck": int(base_luck)
     }
 
     plus_atributy = {
-        "plus_hp": plus_hp,
-        "plus_strength": plus_strength,
-        "plus_dexterity": plus_dexterity,
-        "plus_intelligence": plus_intelligence,
-        "plus_charisma": plus_charisma,
-        "plus_vitality": plus_vitality,
-        "plus_luck": plus_luck
+        "plus_hp": int(plus_hp),
+        "plus_strength": int(plus_strength),
+        "plus_dexterity": int(plus_dexterity),
+        "plus_intelligence": int(plus_intelligence),
+        "plus_charisma": int(plus_charisma),
+        "plus_vitality": int(plus_vitality),
+        "plus_luck": int(plus_luck)
     }
 
     suma_atributy = {
-        "suma_hp":  suma_hp,
-        "suma_strength":  suma_strength,
-        "suma_dexterity": suma_dexterity,
-        "suma_intelligence": suma_intelligence,
-        "suma_charisma": suma_charisma,
-        "suma_vitality": suma_vitality,
-        "suma_luck": suma_luck
+        "suma_hp":  int(suma_hp),
+        "suma_strength":  int(suma_strength),
+        "suma_dexterity": int(suma_dexterity),
+        "suma_intelligence": int(suma_intelligence),
+        "suma_charisma": int(suma_charisma),
+        "suma_vitality": int(suma_vitality),
+        "suma_luck": int(suma_luck)
     }
 
     return suma_atributy, base_atributy, plus_atributy, plus_strength, plus_dexterity, plus_intelligence, plus_charisma, plus_vitality, plus_luck
 
 @login_required
 def atributy_cena(request):
-    plus_strength, plus_dexterity, plus_intelligence, plus_charisma, plus_vitality, plus_luck = atributy_hodnota(request)
+    suma_atributy, base_atributy, plus_atributy, plus_strength, plus_dexterity, plus_intelligence, plus_charisma, plus_vitality, plus_luck = atributy_hodnota(request)
 
 
-    strength_cost = plus_strength * 1.5
-    dexterity_cost = plus_dexterity * 1.5
-    intelligence_cost = plus_intelligence * 1.5
-    vitality_cost = plus_vitality * 1.5
-    luck_cost = plus_luck * 1.5
-    charisma_cost = plus_charisma * 1.5
+    strength_cost = plus_strength * 1.5 + 1
+    dexterity_cost = plus_dexterity * 1.5 + 1
+    intelligence_cost = plus_intelligence * 1.5 + 1
+    vitality_cost = plus_vitality * 1.5 + 1
+    luck_cost = plus_luck * 1.5 + 1
+    charisma_cost = plus_charisma * 1.5 + 1
 
     atributy_cost = {
         "strength_cost":  strength_cost,

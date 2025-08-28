@@ -21,7 +21,7 @@ def profile(request):
     rasa_bonus(request)
 
     # Volání funkce pro atributy
-    suma_atributy, base_atributy, plus_atributy = atributy_hodnota(request)
+    suma_atributy, base_atributy, plus_atributy, plus_strength, plus_dexterity, plus_intelligence, plus_charisma, plus_vitality, plus_luck = atributy_hodnota(request)
 
     # Volání funkce pro cenu atributů
     atributy_cost = atributy_cena(request)
@@ -171,22 +171,37 @@ def update_attribute(request):
                     user.save()
 
                 # Aktualizace atributu a uložení
+                print(f"attribute_to_update: {attribute_to_update}")
                 if attribute_to_update == 'strength':
-                    new_value = user.suma_strength + 1
+                    user.suma_strength += 1
+                    new_value = user.suma_strength
+                    user.save()
                 if attribute_to_update == 'dexterity':
-                    new_value = user.suma_dexterity + 1
+                    user.suma_dexterity += 1
+                    new_value = user.suma_dexterity
+                    user.save()
                 if attribute_to_update == 'intelligence':
-                    new_value = user.suma_intelligence + 1
+                    user.suma_intelligence += 1
+                    new_value = user.suma_intelligence
+                    user.save()
                 if attribute_to_update == 'charisma':
-                    new_value = user.suma_charisma + 1
+                    user.suma_charisma += 1
+                    new_value = user.suma_charisma
+                    user.save()
                 if attribute_to_update == 'vitality':
-                    new_value = user.suma_vitality + 1
+                    user.suma_vitality += 1
+                    user.HP = user.suma_hp
+                    new_value = user.suma_vitality
+                    user.save()
                 if attribute_to_update == 'luck':
-                    new_value = user.suma_luck + 1
+                    user.suma_luck += 1
+                    new_value = user.suma_luck
+                    user.save()
+                print(f"Byla vylepšena {attribute_to_update} na hodnotu {new_value}")
+
 
                 # Vypočítá nové ceny a hodnoty atributů po aktualizaci
                 new_prices = atributy_cena(request)
-                atributy = atributy_hodnota(request)
 
                 # Sestavení a vrácení odpovědi
                 response_data = {
@@ -194,9 +209,8 @@ def update_attribute(request):
                     'new_value': new_value,
                     'new_prices': new_prices,
                     'new_golds': user.gold,
-                    'new_hp': atributy['HP']
+                    'new_hp': user.HP,
                 }
-
                 return JsonResponse(response_data)
             else:
                 return JsonResponse({'success': False, 'error': 'Neplatný atribut.'}, status=400)

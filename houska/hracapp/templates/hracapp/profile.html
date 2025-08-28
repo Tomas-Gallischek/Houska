@@ -147,11 +147,14 @@ Cena: <span id="cena-luck">{{ cena_luck }}</span> goldů<br>
             })
             .then(response => response.json())
             .then(data => {
-                if(data.success) {
+                if (data.success) {
+                    // aktualizace konkrétního atributu
                     const attributeSpan = document.getElementById(attribute + '-value');
-                    attributeSpan.textContent = data.new_value;
-                    
-                    // Aktualizuje ceny pro všechny atributy
+                    if (attributeSpan) {
+                        attributeSpan.textContent = data.new_value;
+                    }
+
+                    // aktualizace cen
                     if (data.new_prices) {
                         for (const price_attribute in data.new_prices) {
                             const priceSpan = document.getElementById('cena-' + price_attribute.replace('_price', ''));
@@ -160,20 +163,22 @@ Cena: <span id="cena-luck">{{ cena_luck }}</span> goldů<br>
                             }
                         }
                     }
-                    
-                    // Aktualizuje počet goldů
-                    if (data.new_golds) {
-                        const goldSpan = document.getElementById('gold-value');
-                        if (goldSpan) {
-                            goldSpan.textContent = data.new_golds;
-                        }
-                    }
-                    
-                    // AKTUALIZUJE HP
-                    if (data.new_hp) {
-                        const hpSpan = document.getElementById('hp-value');
-                        if (hpSpan) {
-                            hpSpan.textContent = data.new_hp;
+
+                    // mapa klíčů z API → id elementů
+                    const updates = {
+                        new_golds: 'gold-value',
+                        new_hp: 'hp-value',
+                        // kdybys měl víc hodnot, stačí jen přidat do mapy
+                        // new_mana: 'mana-value',
+                        // new_xp: 'xp-value'
+                    };
+
+                    for (const key in updates) {
+                        if (data[key] !== undefined) {
+                            const span = document.getElementById(updates[key]);
+                            if (span) {
+                                span.textContent = data[key];
+                            }
                         }
                     }
 
@@ -188,6 +193,7 @@ Cena: <span id="cena-luck">{{ cena_luck }}</span> goldů<br>
         });
     });
 </script>
+
 
 
 {% endblock content %}

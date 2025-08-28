@@ -142,7 +142,8 @@ def update_attribute(request):
                 new_prices = atributy_cena(request)
 
                 if attribute_to_update == 'vitality':
-                    new_hp = user.hp
+                    atributy = atributy_hodnota(request)
+                    new_hp = atributy.HP
 
                 return JsonResponse({'success': True, 'new_value': current_value + 1, 'new_prices': new_prices, 'new_golds': new_golds, 'new_hp': new_hp})
             else:

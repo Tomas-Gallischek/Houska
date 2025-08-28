@@ -15,12 +15,12 @@ def atributy_hodnota(request):
     rasy_povolani.rasa_bonus(request)
 
     # Výpočet HP
-    hp_bonus_procenta = round(user.vitality/10, 2)
+    base_hp = 10
+    hp_bonus_procenta = ((user.vitality)/10) # <-- 10 vit = +1%
     if hp_bonus_procenta <= 1:
         hp_bonus_procenta = 1
-    hp = round(((((user.lvl) + (user.lvl*3))) * user.hp_bonus)*(hp_bonus_procenta)) # <-- 10 vit = +1%
-
-    user.hp = hp
+    hp = (((base_hp) + (user.lvl * 3)* user.hp_bonus)*((100+hp_bonus_procenta)/100)) # např. 101%
+    user.hp = round(hp)
 
     # Vypsání atributů z databáze + BASE staty
     charisma = user.charisma + user.charisma_base

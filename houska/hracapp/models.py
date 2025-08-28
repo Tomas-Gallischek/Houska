@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+
 class Playerinfo(AbstractUser):
 
     GENDER_CHOICES = (
@@ -10,27 +11,27 @@ class Playerinfo(AbstractUser):
     )
 
     RASA_CHOICES = (
-            ('Choice:', 'Vyber:'),
-            ('human', 'Člověk'),
-            ('elf', 'Elf'),
-            ('dwarf', 'Trpaslík'),
-            ('urgal', 'Urgal'),
-            ('gnóm', 'Gnóm'),
-            ('shadow', 'Stín'),
-        )
+        ('Choice:', 'Vyber:'),
+        ('human', 'Člověk'),
+        ('elf', 'Elf'),
+        ('dwarf', 'Trpaslík'),
+        ('urgal', 'Urgal'),
+        ('gnóm', 'Gnóm'),
+        ('shadow', 'Stín'),
+    )
 
     POVOLANI_CHOICES = (
-            ('choice:', 'Vyber:'),
-            ('ranger', 'Hraničář'),
-            ('monk', 'Mnich'),
-            ('warrior', 'Válečník'),
-            ('paladin', 'Paladin'),
-            ('mage', 'Mág'),
-            ('rogue', 'Roguna'),
-            ('necromancer', 'Nekromant'),
-            ('berserker', 'Ničitel'),
-            ('druid', 'Druid')
-        )
+        ('choice:', 'Vyber:'),
+        ('ranger', 'Hraničář'),
+        ('monk', 'Mnich'),
+        ('warrior', 'Válečník'),
+        ('paladin', 'Paladin'),
+        ('mage', 'Mág'),
+        ('rogue', 'Roguna'),
+        ('necromancer', 'Nekromant'),
+        ('berserker', 'Ničitel'),
+        ('druid', 'Druid')
+    )
 
     # OSOBNÍ INFORMACE O HRÁČI
     name = models.CharField(max_length=100, blank=True, null=True)
@@ -70,4 +71,3 @@ class Playerinfo(AbstractUser):
 
     def __str__(self):
         return self.username
-

@@ -37,15 +37,10 @@ def povolani_bonus(request):
     request.user.save()
 
 
-
-
-
-
-
 @login_required
 def rasa_bonus(request):
 
-    koeficient_statu = 3 # JEŠTĚ NEVÍM KOLIK PŘESNĚ BUDOU ZÁKLADNÍ STATY. PÍŠU TO CO BYL ORIGINÁL A PŘÍPADNĚ TO NÁSOBÍM
+    koeficient_statu = 3  # JEŠTĚ NEVÍM KOLIK PŘESNĚ BUDOU ZÁKLADNÍ STATY. PÍŠU TO CO BYL ORIGINÁL A PŘÍPADNĚ TO NÁSOBÍM
 
     if request.user.rasa == 'Člověk' or request.user.rasa == 'human':
         # OBECNÉ BONUSY
@@ -78,7 +73,7 @@ def rasa_bonus(request):
         dexterity_bonus = 3 * koeficient_statu
         intelligence_bonus = 3 * koeficient_statu
         charisma_bonus = 3 * koeficient_statu
-        luck_bonus = 6 * koeficient_statu  
+        luck_bonus = 6 * koeficient_statu
 
     elif request.user.rasa == 'Urgal' or request.user.rasa == 'urgal':
         # OBECNÉ BONUSY

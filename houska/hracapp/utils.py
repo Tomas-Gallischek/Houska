@@ -8,20 +8,17 @@ from django.utils import timezone
 from .models import Playerinfo
 
 
-
 @login_required
 def atributy_hodnota(request):
     user = request.user
-    rasy_povolani.rasa_bonus(request)
-
+    
     # Výpočet HP
     base_hp = 10
-    hp_bonus_procenta = ((user.vitality)/10) # <-- 10 vit = +1%
+    hp_bonus_procenta = ((user.vitality) / 10)  # <-- 10 vit = +1%
     if hp_bonus_procenta <= 1:
         hp_bonus_procenta = 1
-    hp = (((base_hp) + (user.lvl * 3)* user.hp_bonus)*((100+hp_bonus_procenta)/100)) # např. 101%
-    user.hp = round(hp)
-
+    hp = (((base_hp) + (user.lvl * 3) * user.hp_bonus) * ((100 + hp_bonus_procenta) / 100))  # např. 101%
+    
     # Vypsání atributů z databáze + BASE staty
     charisma = user.charisma + user.charisma_base
     dexterity = user.dexterity + user.dexterity_base
@@ -41,27 +38,20 @@ def atributy_hodnota(request):
         'hp_bonus_procenta': int(hp_bonus_procenta)
     }
 
-
-    user.save()
     return atributy
+
 
 def atributy_cena(request):
 
-    user = atributy_hodnota(request)
-    hp = user['HP']
-    charisma = user['charisma']
-    dexterity = user['dexterity']
-    intelligence = user['intelligence']
-    luck = user['luck']
-    strength = user['strength']
-    vitality = user['vitality']
-
-    charisma_price = (charisma - request.user.charisma_base) + ((charisma - request.user.charisma_base) * 1.5)
-    dexterity_price = (dexterity - request.user.dexterity_base) + ((dexterity - request.user.dexterity_base) * 1.5)
-    intelligence_price = (intelligence - request.user.intelligence_base) + ((intelligence - request.user.intelligence_base) * 1.5)
-    luck_price = (luck - request.user.luck_base) + ((luck - request.user.luck_base) * 1.5)
-    strength_price = (strength - request.user.strength_base) + ((strength - request.user.strength_base) * 1.5)
-    vitality_price = (vitality - request.user.vitality_base) + ((vitality - request.user.vitality_base) * 1.5)
+    user = request.user
+    atributy = atributy_hodnota(request)
+    
+    charisma_price = (atributy['charisma'] - user.charisma_base) + ((atributy['charisma'] - user.charisma_base) * 1.5)
+    dexterity_price = (atributy['dexterity'] - user.dexterity_base) + ((atributy['dexterity'] - user.dexterity_base) * 1.5)
+    intelligence_price = (atributy['intelligence'] - user.intelligence_base) + ((atributy['intelligence'] - user.intelligence_base) * 1.5)
+    luck_price = (atributy['luck'] - user.luck_base) + ((atributy['luck'] - user.luck_base) * 1.5)
+    strength_price = (atributy['strength'] - user.strength_base) + ((atributy['strength'] - user.strength_base) * 1.5)
+    vitality_price = (atributy['vitality'] - user.vitality_base) + ((atributy['vitality'] - user.vitality_base) * 1.5)
 
     cena = {
         'charisma_price': int(charisma_price),
@@ -74,21 +64,22 @@ def atributy_cena(request):
 
     return cena
 
+
 def calculate_xp_and_level(request):
     user = request.user
     steps = user.steps if user.steps is not None else 0
     XP_aktual = steps
     lvl_aktual = 1
     lvl_next = 2
-    XP_potrebne_next = round((22*lvl_aktual)*((lvl_next)*1.1))
+    XP_potrebne_next = round((22 * lvl_aktual) * ((lvl_next) * 1.1))
 
     for lvl in range(1, 500):
-        XP_potrebne = round((22*lvl)*((lvl**1.1)))
+        XP_potrebne = round((22 * lvl) * ((lvl**1.1)))
         if XP_aktual >= XP_potrebne:
             XP_aktual -= XP_potrebne
             lvl_aktual += 1
             lvl_next = lvl_aktual + 1
-            XP_potrebne_next = round((22*lvl_next)*((lvl_next**1.1)))
+            XP_potrebne_next = round((22 * lvl_next) * ((lvl_next**1.1)))
         else:
             user.xp = XP_aktual
             user.lvl = lvl_aktual
@@ -119,8 +110,4 @@ def calculate_gold(user, lvl_aktual):
     gold_limit = gold_per_hour * 8  # Limit pro zobrazení
 
     user.save()
-    return round(collected_gold,2), round(gold_growth_coefficient,2), round(gold_limit,2), round(gold_per_hour,2)
-
-
-
-
+    return round(collected_gold, 2), round(gold_growth_coefficient, 2), round(gold_limit, 2), round(gold_per_hour, 2)

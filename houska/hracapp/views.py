@@ -16,7 +16,6 @@ from .utils import calculate_xp_and_level, calculate_gold, atributy_hodnota, atr
 
 @login_required
 def profile(request):
-    
     # Inicializace RASY A POVOLÁNÍ
     povolani_bonus(request)
     rasa_bonus(request)
@@ -82,11 +81,13 @@ def profile(request):
 def protected_page(request):
     return render(request, 'hracapp/protected-page.html')
 
+
 def index(request):
     return render(request, 'hracapp/index.html')
 
+
 def register(request):
-    #REGISTRAČNÍ FORMULÁŘ
+    # REGISTRAČNÍ FORMULÁŘ
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -97,8 +98,10 @@ def register(request):
         form = RegistrationForm()
     return render(request, 'hracapp/register.html', {'form': form})
 
+
 def render_profile(request, context):
     return render(request, 'hracapp/profile.html', context)
+
 
 def update_steps(request):
     if request.method == 'POST':
@@ -112,75 +115,66 @@ def update_steps(request):
     return render(request, 'hracapp/steps_input.html')
 
 
-# houska/hracapp/views.py
-import json
-from urllib import request
-from django import utils
-from django.shortcuts import render, redirect
-from .off_deff import fight_def, fight_off, iniciace
-from .rasy_povolani import povolani_bonus, rasa_bonus
-from .forms import RegistrationForm
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login
-from django.contrib import messages
-from django.utils import timezone
-from .models import Playerinfo
-from django.http import JsonResponse
-from .utils import calculate_xp_and_level, calculate_gold, atributy_hodnota, atributy_cena
-
-
-#...
 @login_required
 def update_attribute(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             attribute_to_update = data.get('attribute')
-            
-            # Zkontroluje, zda je atribut platný a není to HP
+
+            # Zkontroluje, zda je atribut platný
             valid_attributes = ['strength', 'dexterity', 'intelligence', 'charisma', 'vitality', 'luck']
             if attribute_to_update in valid_attributes:
 
-                # Odečtení ceny atributu z uživatelských goldů
                 user = request.user
-                old_prices = atributy_cena(request)
-                atribut_bill = old_prices.get(f'{attribute_to_update}_price')
+
+                # Získáme aktuální ceny
+                current_prices = atributy_cena(request)
+                atribut_bill = current_prices.get(f'{attribute_to_update}_price')
+
+                # Kontrola dostatku goldů
                 if user.gold < atribut_bill:
                     return JsonResponse({'success': False, 'error': 'Nedostatek zlata.'})
+
+                # Odečtení ceny atributu z uživatelských goldů a uložení
                 user.gold -= atribut_bill
                 user.save()
-                new_golds = user.gold
 
-                # Aktualizace atributu
+                # Aktualizace atributu a uložení
                 current_value = getattr(user, attribute_to_update)
-                setattr(user, attribute_to_update, current_value + 1)
+                new_value = current_value + 1
+                setattr(user, attribute_to_update, new_value)
                 user.save()
 
-                # Vypočítá nové ceny atributů
+                # Vypočítá nové ceny a hodnoty atributů po aktualizaci
                 new_prices = atributy_cena(request)
-                
-                # new_hp je definována pouze, pokud je aktualizována vitalita
-                new_hp = None
-                if attribute_to_update == 'vitality':
-                    atributy = atributy_hodnota(request)
-                    new_hp = atributy['HP']
+                atributy = atributy_hodnota(request)
 
-                return JsonResponse({'success': True, 'new_value': current_value + 1, 'new_prices': new_prices, 'new_golds': new_golds, 'new_hp': new_hp})
+                # Sestavení a vrácení odpovědi
+                response_data = {
+                    'success': True,
+                    'new_value': new_value,
+                    'new_prices': new_prices,
+                    'new_golds': user.gold,
+                    'new_hp': atributy['HP']
+                }
+
+                return JsonResponse(response_data)
             else:
                 return JsonResponse({'success': False, 'error': 'Neplatný atribut.'}, status=400)
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'error': 'Neplatná JSON data.'}, status=400)
-    
+
     return JsonResponse({'success': False, 'error': 'Neplatná metoda požadavku.'}, status=405)
-#...
+
 
 @login_required
 def gold_per_second(request):
-    lvl_aktual = calculate_xp_and_level(request)[1] 
+    lvl_aktual = calculate_xp_and_level(request)[1]
     golds_info = calculate_gold(request.user, lvl_aktual)
     collected_gold = golds_info[0]
-    aktualizovana_hodnota = collected_gold 
-    
+    aktualizovana_hodnota = collected_gold
+
     # Vrácení dat jako JSON
     data = {
         'hodnota': aktualizovana_hodnota,

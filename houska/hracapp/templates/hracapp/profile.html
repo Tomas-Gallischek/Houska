@@ -12,63 +12,26 @@
   <p>Potřebné XP pro další úroveň: {{ XP_potrebne_next }}</p>
   <p>Našetřeno XP: {{ XP_aktual }}</p>
 
-<p>HP: <span id="hp-value">{{ suma_hp }}</span></p>
+<p>HP: <span id="hp-value">{{ atributy.HP }}</span></p>
 
-{% if weapon_typ == "heavy" %}
-<b>Síla: <span id="strength-value">{{ suma_strength }}</span> <button class="plus-button" data-attribute="strength">+</button></p></b>
-Cena: <span id="cena-strength">{{ strength_cost }}</span> goldů<br><p>
-Průměrné poškození: {{ center_dmg }}<br>
-Odolnost proti těžkým zbraním: {{ heavy_res }}%<br>
+<p>Strength: <span id="strength-value">{{ atributy.strength }}</span> <button class="upgrade-btn" data-attribute="strength">+</button></p>
+Cena: <span id="cena-strength">{{ cena_strength }}</span> goldů<br>
 
-<p>Inteligence: <span id="intelligence-value">{{ suma_intelligence }}</span> <button class="plus-button" data-attribute="intelligence">+</button></p>
-Cena: <span id="cena-intelligence">{{ intelligence_cost }}</span> goldů<br>
-odolnost proti magickým zbraním: {{ magic_res }}%<br>
+<p>Intelligence: <span id="intelligence-value">{{ atributy.intelligence }}</span> <button class="upgrade-btn" data-attribute="intelligence">+</button></p>
+Cena: <span id="cena-intelligence">{{ cena_intelligence }}</span> goldů<br>
 
-<p>Obratnost: <span id="dexterity-value">{{ suma_dexterity }}</span> <button class="plus-button" data-attribute="dexterity">+</button></p>
-Cena: <span id="cena-dexterity">{{ dexterity_cost }}</span> goldů<br>
-Odolnost proti lehkým zbraním: {{ light_res }}%<br>
+<p>Vitality: <span id="vitality-value">{{ atributy.vitality }}</span> <button class="upgrade-btn" data-attribute="vitality">+</button></p>
+Cena: <span id="cena-vitality">{{ cena_vitality }}</span> goldů<br>
 
-{% elif weapon_typ == "light" %}
-<p>Obratnost: <span id="dexterity-value">{{ suma_dexterity }}</span> <button class="plus-button" data-attribute="dexterity">+</button></p>
-Cena: <span id="cena-dexterity">{{ dexterity_cost }}</span> goldů<br>
-Průměrné poškození: {{ center_dmg }}<br>
-Odolnost proti lehkým zbraním: {{ light_res }}%<br>
+<p>Dexterity: <span id="dexterity-value">{{ atributy.dexterity }}</span> <button class="upgrade-btn" data-attribute="dexterity">+</button></p>
+Cena: <span id="cena-dexterity">{{ cena_dexterity }}</span> goldů<br>
 
-<b>Síla: <span id="strength-value">{{ suma_strength }}</span> <button class="plus-button" data-attribute="strength">+</button></p>
-Cena: <span id="cena-strength">{{ strength_cost }}</span> goldů<br></b><p>
-Odolnost proti těžkým zbraním: {{ heavy_res }}%<br>
+<p>Charisma: <span id="charisma-value">{{ atributy.charisma }}</span> <button class="upgrade-btn" data-attribute="charisma">+</button></p>
+Cena: <span id="cena-charisma">{{ cena_charisma }}</span> goldů<br>
 
-<p>Inteligence: <span id="intelligence-value">{{ suma_intelligence }}</span> <button class="plus-button" data-attribute="intelligence">+</button></p>
-Cena: <span id="cena-intelligence">{{ intelligence_cost }}</span> goldů<br>
-Odolnost proti magickým zbraním: {{ magic_res }}%<br>
+<p>Skill: <span id="skill-value">{{ atributy.skill }}</span> <button class="upgrade-btn" data-attribute="skill">+</button></p>
+Cena: <span id="cena-skill">{{ cena_skill }}</span> goldů<br>
 
-{% elif weapon_typ == "magic" %}
-<p>Inteligence: <span id="intelligence-value">{{ suma_intelligence }}</span> <button class="plus-button" data-attribute="intelligence">+</button></p>
-Cena: <span id="cena-intelligence">{{ intelligence_cost }}</span> goldů<br>
-Průměrné poškození: {{ center_dmg }}<br>
-Odolnost proti magickým zbraním: {{ magic_res }}%<br>
-
-<b>Síla: <span id="strength-value">{{ suma_strength }}</span> <button class="plus-button" data-attribute="strength">+</button></p>
-Cena: <span id="cena-strength">{{ strength_cost }}</span> goldů<br></b><p>
-Odolnost proti těžkým zbraním: {{ heavy_res }}%<br>
-
-<p>Obratnost: <span id="dexterity-value">{{ suma_dexterity }}</span> <button class="plus-button" data-attribute="dexterity">+</button></p>
-Cena: <span id="cena-dexterity">{{ dexterity_cost }}</span> goldů<br>
-Odolnost proti lehkým zbraním: {{ light_res }}%<br>
-
-{% endif %}
-
-<p>Vitalita: <span id="vitality-value">{{ suma_vitality }}</span> <button class="plus-button" data-attribute="vitality">+</button></p>
-Cena: <span id="cena-vitality">{{ vitality_cost }}</span> goldů<br>
-BONUS K ŽIVOTŮM: {{ atributy.hp_bonus_procenta }}%<br>
-
-<p>Charisma: <span id="charisma-value">{{ suma_charisma }}</span> <button class="plus-button" data-attribute="charisma">+</button></p>
-Cena: <span id="cena-charisma">{{ charisma_cost }}</span> goldů<br>
-Šance na první úder: {{ inicial_number }}%<br>
-
-<p>Štěstí: <span id="luck-value">{{ suma_luck }}</span> <button class="plus-button" data-attribute="luck">+</button></p>
-Cena: <span id="cena-luck">{{ luck_cost }}</span> goldů<br>
-Šance na kritický zásah: {{ crit_chance }}%<br>
 
   <ul>
     <li>Kroky: {{ request.user.steps }}</li>
@@ -94,106 +57,99 @@ Cena: <span id="cena-luck">{{ luck_cost }}</span> goldů<br>
     </ul>
 {% endif %}
 
-
+<div id="error-message" class="alert alert-danger d-none mt-3" role="alert"></div>
 
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-  const updateInterval = 1000; // Interval v milisekundách (1000ms = 1 sekunda)
-  const elementToUpdate = document.getElementById('collected-gold'); // ID HTML elementu, který chcete aktualizovat
+        const updateInterval = 1000;
+        const collectedGoldElement = document.getElementById('collected-gold');
+        const upgradeButtons = document.querySelectorAll('.upgrade-btn');
+        const goldValueElement = document.getElementById('gold-value');
+        const errorMessageElement = document.getElementById('error-message');
 
-  function fetchAndUpdateViews() {
-    fetch('/gold_per_second') // Nahraďte '/vasi-url-pro-views' skutečnou URL, která směřuje na views.py
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Chyba sítě - odpověď nebyla ok.');
+        function fetchAndUpdateCollectedGold() {
+            fetch('/gold_per_second')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Chyba sítě - odpověď nebyla ok.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (collectedGoldElement) {
+                        collectedGoldElement.textContent = data.hodnota;
+                    }
+                })
+                .catch(error => {
+                    console.error('Došlo k chybě při načítání goldů:', error);
+                });
         }
-        return response.json(); // Předpokládá se, že views.py vrací JSON
-      })
-      .then(data => {
-        // Zde zpracujete data a aktualizujete HTML element
-        // Předpokládá se, že data jsou objekt s klíčem 'hodnota'
-        elementToUpdate.textContent = data.hodnota; 
-      })
-      .catch(error => {
-        // Tuto část můžete ponechat, pokud chcete interně zpracovat chyby, ale nebudou se vypisovat do konzole.
-        // Můžete sem přidat kód, který například zobrazí uživateli zprávu o chybě na stránce, nebo nic nedělat.
-      });
-  }
 
-  // Spuštění prvního dotazu ihned po načtení stránky
-  fetchAndUpdateViews();
+        // Spuštění prvního dotazu ihned po načtení stránky
+        fetchAndUpdateCollectedGold();
 
-  // Nastavení intervalu pro opakování dotazu každou sekundu
-  setInterval(fetchAndUpdateViews, updateInterval);
-});
-</script>
+        // Nastavení intervalu pro opakování dotazu
+        setInterval(fetchAndUpdateCollectedGold, updateInterval);
 
+        // Funkcionalita pro vylepšení atributů
+        upgradeButtons.forEach(button => {
+            button.addEventListener('click', async (e) => {
+                const attributeName = e.target.dataset.attribute;
 
-<script>
-    document.querySelectorAll('.plus-button').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const attribute = this.dataset.attribute;
-            const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+                errorMessageElement.classList.add('d-none');
+                errorMessageElement.textContent = '';
 
-            fetch('{% url "update-attribute-url" %}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
-                },
-                body: JSON.stringify({ attribute: attribute })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // aktualizace konkrétního atributu
-                    const attributeSpan = document.getElementById(attribute + '-value');
-                    if (attributeSpan) {
-                        attributeSpan.textContent = data.new_value;
-                    }
+                try {
+                    const response = await fetch('/hrac/upgrade_attribute/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCsrfToken()
+                        },
+                        body: JSON.stringify({ 'attribute': attributeName })
+                    });
 
-                    // aktualizace cen
-                    if (data.new_prices) {
-                        for (const price_attribute in data.new_prices) {
-                            const priceSpan = document.getElementById('cena-' + price_attribute.replace('_price', ''));
-                            if (priceSpan) {
-                                priceSpan.textContent = data.new_prices[price_attribute];
+                    const data = await response.json();
+
+                    if (data.success) {
+                        const attributeValueElement = document.getElementById(`${attributeName}-value`);
+                        if (attributeValueElement) {
+                            attributeValueElement.textContent = data.new_value;
+                        }
+
+                        if (goldValueElement) {
+                            goldValueElement.textContent = data.new_gold;
+                        }
+
+                        // Aktualizace cen pro všechny atributy (pokud je view funkce vrací)
+                        if (data.new_prices) {
+                            for (const price_attribute in data.new_prices) {
+                                const priceSpan = document.getElementById('cena-' + price_attribute.replace('_price', ''));
+                                if (priceSpan) {
+                                    priceSpan.textContent = data.new_prices[price_attribute];
+                                }
                             }
                         }
+
+                    } else {
+                        errorMessageElement.textContent = data.error;
+                        errorMessageElement.classList.remove('d-none');
                     }
-
-                    // mapa klíčů z API → id elementů
-                    const updates = {
-                        new_golds: 'gold-value',
-                        new_hp: 'hp-value',
-                        // kdybys měl víc hodnot, stačí jen přidat do mapy
-                        // new_mana: 'mana-value',
-                        // new_xp: 'xp-value'
-                    };
-
-                    for (const key in updates) {
-                        if (data[key] !== undefined) {
-                            const span = document.getElementById(updates[key]);
-                            if (span) {
-                                span.textContent = data[key];
-                            }
-                        }
-                    }
-
-                } else {
-                    alert(data.error);
+                } catch (error) {
+                    console.error('Došlo k chybě:', error);
+                    errorMessageElement.textContent = 'Došlo k neočekávané chybě. Zkuste to prosím znovu.';
+                    errorMessageElement.classList.remove('d-none');
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Při aktualizaci atributu došlo k chybě.');
             });
         });
+
+        function getCsrfToken() {
+            const tokenInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+            return tokenInput ? tokenInput.value : '';
+        }
     });
 </script>
-
 
 
 {% endblock content %}

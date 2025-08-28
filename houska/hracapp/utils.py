@@ -16,6 +16,8 @@ def atributy_hodnota(request):
 
     # Výpočet HP
     hp_bonus_procenta = round(user.vitality/10, 2)
+    if hp_bonus_procenta <= 1:
+        hp_bonus_procenta = 1
     hp = round(((((user.lvl) + (user.lvl*3))) * user.hp_bonus)*(hp_bonus_procenta)) # <-- 10 vit = +1%
 
     user.hp = hp

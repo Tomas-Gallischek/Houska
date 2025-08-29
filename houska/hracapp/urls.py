@@ -12,5 +12,5 @@ urlpatterns = [
     path('protected-page', views.protected_page, name='protected-page-url'),
     path('update-steps', views.update_steps, name='update-steps-url'),
     path('gold_per_second', views.gold_per_second, name='views-data-url'),  # Přidána URL pro získání dat z views.py
-    path('upgrade-attribute/', views.upgrade_attribute, name='upgrade-attribute-url'),
+    path('upgrade-attribute/', views.update_attribute, name='upgrade-attribute-url'),
     ]

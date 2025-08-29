@@ -12,8 +12,7 @@ from django.utils import timezone
 from .models import Playerinfo
 from django.http import JsonResponse
 from .utils import calculate_xp_and_level, calculate_gold, atributy_hodnota, atributy_cena
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+
 
 @login_required
 def profile(request):
@@ -146,42 +145,61 @@ def update_steps(request):
 
 
 @login_required
-def upgrade_attribute(request):
+def update_attribute(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            attribute_name = data.get('attribute')
-            
-            player = request.user
-            if not player:
-                return JsonResponse({'success': False, 'error': 'Hráč nenalezen.'}, status=404)
-            
-            current_value = getattr(player, attribute_name, None)
-            if current_value is None:
-                return JsonResponse({'success': False, 'error': 'Neplatný atribut.'}, status=400)
-            
-            # Předpokládám, že get_attribute_cost je ve utils.py
-            cost = atributy_cena(player, attribute_name)
-            
-            if player.gold < cost:
-                return JsonResponse({'success': False, 'error': 'Nedostatek zlata!'}, status=403)
-            
-            # Vylepšení atributu a odečtení zlata
-            setattr(player, attribute_name, current_value + 1)
-            player.gold -= cost
-            player.save()
-            
-            return JsonResponse({
-                'success': True,
-                'new_value': getattr(player, attribute_name),
-                'new_gold': player.gold
-            })
+            attribute_to_update = data.get('attribute')
 
+            # Zkontroluje, zda je atribut platný
+            valid_attributes = ['strength', 'dexterity', 'intelligence', 'charisma', 'vitality', 'luck']
+            if attribute_to_update in valid_attributes:
+
+                user = request.user
+                
+                # Získáme aktuální ceny
+                current_prices = atributy_cena(request)
+                atribut_bill = current_prices.get(f'{attribute_to_update}_cost')
+
+                # Kontrola dostatku goldů
+                if user.gold < atribut_bill:
+                    return JsonResponse({'success': False, 'error': 'Nedostatek zlata.'}, status=403)
+
+                # Odečtení ceny atributu z uživatelských goldů a uložení
+                user.gold -= atribut_bill
+                
+                # Aktualizace správného atributu (plus) a uložení
+                current_plus_value = getattr(user, f'{attribute_to_update}_plus')
+                setattr(user, f'{attribute_to_update}_plus', current_plus_value + 1)
+
+                # Speciální případ pro vitalitu, kde se aktualizují HP
+                if attribute_to_update == 'vitality':
+                    user.HP = atributy_hodnota(request)[0]['suma_hp']
+
+                user.save()
+                
+                # Vypočítá nové ceny a hodnoty atributů po aktualizaci
+                suma_atributy = atributy_hodnota(request)[0]
+                new_prices = atributy_cena(request)
+                
+                new_value = suma_atributy.get(f'suma_{attribute_to_update}')
+
+                # Sestavení a vrácení odpovědi
+                response_data = {
+                    'success': True,
+                    'new_value': new_value,
+                    'new_prices': new_prices,
+                    'new_golds': user.gold,
+                    'new_hp': suma_atributy['suma_hp'] if attribute_to_update == 'vitality' else user.HP,
+                }
+                return JsonResponse(response_data)
+            else:
+                return JsonResponse({'success': False, 'error': 'Neplatný atribut.'}, status=400)
         except json.JSONDecodeError:
-            return JsonResponse({'success': False, 'error': 'Neplatná data JSON.'}, status=400)
+            return JsonResponse({'success': False, 'error': 'Neplatná JSON data.'}, status=400)
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
-    
+
     return JsonResponse({'success': False, 'error': 'Neplatná metoda požadavku.'}, status=405)
 
 

@@ -90,20 +90,20 @@ def atributy_cena(request):
     suma_atributy, base_atributy, plus_atributy, plus_strength, plus_dexterity, plus_intelligence, plus_charisma, plus_vitality, plus_luck = atributy_hodnota(request)
 
 
-    strength_cost = plus_strength * 1.5 + 1
-    dexterity_cost = plus_dexterity * 1.5 + 1
-    intelligence_cost = plus_intelligence * 1.5 + 1
-    vitality_cost = plus_vitality * 1.5 + 1
-    luck_cost = plus_luck * 1.5 + 1
-    charisma_cost = plus_charisma * 1.5 + 1
+    strength_cost = 1 + (plus_strength**2)
+    dexterity_cost = 1 + (plus_dexterity**2)
+    intelligence_cost = 1 + (plus_intelligence**2)
+    vitality_cost = 1 + (plus_vitality**2)
+    luck_cost = 1 + (plus_luck**2)
+    charisma_cost = 1 + (plus_charisma**2)
 
     atributy_cost = {
-        "strength_cost":  strength_cost,
-        "dexterity_cost":  dexterity_cost,
-        "intelligence_cost":  intelligence_cost,
-        "charisma_cost":  charisma_cost,
-        "vitality_cost":  vitality_cost,
-        "luck_cost":  luck_cost,
+        "strength_cost":  round(strength_cost, 1),
+        "dexterity_cost":  round(dexterity_cost, 1),
+        "intelligence_cost":  round(intelligence_cost, 1),
+        "charisma_cost":  round(charisma_cost, 1),
+        "vitality_cost":  round(vitality_cost, 1),
+        "luck_cost":  round(luck_cost, 1),
     }
 
     return atributy_cost

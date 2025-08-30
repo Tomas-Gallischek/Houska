@@ -16,6 +16,7 @@ from .utils import calculate_xp_and_level, calculate_gold, atributy_hodnota, atr
 
 @login_required
 def profile(request):
+    user = login_required
     # Inicializace RASY A POVOLÁNÍ
     povolani_bonus(request)
     rasa_bonus(request)
@@ -103,7 +104,7 @@ def profile(request):
         'inicial_number': inicial_number,
     }
 
-    return render_profile(request, context)
+    return render_profile(request, context, user)
 
 
 @login_required
